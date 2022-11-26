@@ -66,7 +66,7 @@
         </a>
     </li>
     <li>
-        <a href="widgets.html">
+        <a href="{{ route('pkh.index') }}">
             <div class="parent-icon"><i class='bx bx-joystick-button'></i>
             </div>
             <div class="menu-title">PKH</div>

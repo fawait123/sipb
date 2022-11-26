@@ -15,8 +15,13 @@ class CreateBantuansTable extends Migration
     {
         Schema::create('bantuans', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_bantuan');
-            $table->text('keterangan');
+            $table->integer('id_jenis_bantuan');
+            $table->text('keterangan_bantuan')->nullable();
+            $table->date('tgl_pengajuan');
+            $table->date('tgl_penerimaan');
+            $table->string('no_surat');
+            $table->integer('id_user_input');
+            $table->text('status');
             $table->timestamps();
         });
     }
