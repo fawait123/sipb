@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Penduduk;
+use App\Models\Agama;
+use App\Models\Pekerjaan;
+use App\Models\Desa;
 use Illuminate\Http\Request;
 
 class PendudukController extends Controller
@@ -14,7 +17,7 @@ class PendudukController extends Controller
      */
     public function index()
     {
-        //
+        return view('pages.penduduk.index');
     }
 
     /**
@@ -24,7 +27,11 @@ class PendudukController extends Controller
      */
     public function create()
     {
-        //
+        return view('pages.penduduk.form',[
+            'agama'=>Agama::get(),
+            'pekerjaan'=>Pekerjaan::get(),
+            'desa'=>Desa::get(),
+        ]);
     }
 
     /**
@@ -35,7 +42,43 @@ class PendudukController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nik'=>'required|unique:penduduks,nik',
+            'tempat_lahir'=>'required',
+            'jk' =>'required',
+            'agama'=>'required',
+            'status_kawin'=>'required',
+            'pekerjaan'=>'required',
+            'kewarganegaraan'=>'required',
+            'goldar'=>'required',
+            'nama'=>'required',
+            'alamat'=>'required',
+            'tgl_lahir'=>'required',
+            'nama_ibu'=>'required',
+            'nama_ayah'=>'required',
+            'pendidikan_terakhir'=>'required',
+            'desa'=>'required'
+        ]);
+
+        Penduduk::create([
+            'nik'=>$request->nik,
+            'tempat_lahir'=>$request->tempat_lahir,
+            'jk' =>$request->jk,
+            'id_agama'=>$request->agama,
+            'status_kawin'=>$request->status_kawin,
+            'id_pekerjaan'=>$request->pekerjaan,
+            'kewarganegaraan'=>$request->kewarganegaraan,
+            'goldar'=>$request->goldar,
+            'nama'=>$request->nama,
+            'alamat'=>$request->alamat,
+            'tgl_lahir'=>date('Y-m-d',strtotime($request->tgl_lahir)),
+            'nama_ibu'=>$request->nama_ibu,
+            'nama_ayah'=>$request->nama_ayah,
+            'pendidikan_terakhir'=>$request->pendidikan_terakhir,
+            'id_desa'=>$request->desa,
+        ]);
+
+        return redirect()->route('penduduk.index')->with(['message'=>'Tambah data penduduk berhasil']);
     }
 
     /**
@@ -57,7 +100,17 @@ class PendudukController extends Controller
      */
     public function edit(Penduduk $penduduk)
     {
-        //
+        if($penduduk){
+            return view('pages.penduduk.form',[
+                'agama'=>Agama::get(),
+                'pekerjaan'=>Pekerjaan::get(),
+                'desa'=>Desa::get(),
+                'penduduk'=>$penduduk,
+                'id'=>$penduduk->id
+            ]);
+        }
+
+        return abort(404);
     }
 
     /**
@@ -69,7 +122,43 @@ class PendudukController extends Controller
      */
     public function update(Request $request, Penduduk $penduduk)
     {
-        //
+        $request->validate([
+            'nik'=>'required|unique:penduduks,nik,'.$penduduk->id,
+            'tempat_lahir'=>'required',
+            'jk' =>'required',
+            'agama'=>'required',
+            'status_kawin'=>'required',
+            'pekerjaan'=>'required',
+            'kewarganegaraan'=>'required',
+            'goldar'=>'required',
+            'nama'=>'required',
+            'alamat'=>'required',
+            'tgl_lahir'=>'required',
+            'nama_ibu'=>'required',
+            'nama_ayah'=>'required',
+            'pendidikan_terakhir'=>'required',
+            'desa'=>'required'
+        ]);
+
+        $penduduk->update([
+            'nik'=>$request->nik,
+            'tempat_lahir'=>$request->tempat_lahir,
+            'jk' =>$request->jk,
+            'id_agama'=>$request->agama,
+            'status_kawin'=>$request->status_kawin,
+            'id_pekerjaan'=>$request->pekerjaan,
+            'kewarganegaraan'=>$request->kewarganegaraan,
+            'goldar'=>$request->goldar,
+            'nama'=>$request->nama,
+            'alamat'=>$request->alamat,
+            'tgl_lahir'=>date('Y-m-d',strtotime($request->tgl_lahir)),
+            'nama_ibu'=>$request->nama_ibu,
+            'nama_ayah'=>$request->nama_ayah,
+            'pendidikan_terakhir'=>$request->pendidikan_terakhir,
+            'id_desa'=>$request->desa,
+        ]);
+
+        return redirect()->route('penduduk.index')->with(['message'=>'Update data penduduk berhasil']);
     }
 
     /**
@@ -80,6 +169,11 @@ class PendudukController extends Controller
      */
     public function destroy(Penduduk $penduduk)
     {
-        //
+        if($penduduk){
+            $penduduk->delete();
+            return redirect()->route('penduduk.index')->with(['message'=>'Hapus data penduduk berhasil']);
+        }
+
+        return abort(404);
     }
 }

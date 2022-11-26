@@ -14,7 +14,7 @@ class DetailBantuanController extends Controller
      */
     public function index()
     {
-        //
+        return 'oke';
     }
 
     /**

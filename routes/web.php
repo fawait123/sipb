@@ -7,6 +7,8 @@ use App\Http\Controllers\PekerjaanController;
 use App\Http\Controllers\KabupatenController;
 use App\Http\Controllers\KecamatanController;
 use App\Http\Controllers\DesaController;
+use App\Http\Controllers\PendudukController;
+use App\Http\Controllers\KeluargaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +22,7 @@ use App\Http\Controllers\DesaController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 Auth::routes();
@@ -34,4 +36,8 @@ Route::group(['prefix'=>'masterdata'],function(){
     Route::resource('kabupaten',KabupatenController::class);
     Route::resource('kecamatan',KecamatanController::class);
     Route::resource('desa',DesaController::class);
+    Route::resource('penduduk',PendudukController::class);
+    Route::get('/keluarga/findPenduduk',[KeluargaController::class,'findPenduduk'])->name('keluarga.findPenduduk');
+    Route::get('/keluarga/findKeluarga',[KeluargaController::class,'findKeluarga'])->name('keluarga.findKeluarga');
+    Route::resource('keluarga',KeluargaController::class);
 });

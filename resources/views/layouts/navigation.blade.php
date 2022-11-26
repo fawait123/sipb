@@ -9,14 +9,14 @@
     </li>
     <li class="menu-label">Master Data</li>
     <li>
-        <a href="widgets.html">
+        <a href="{{ route('penduduk.index') }}">
             <div class="parent-icon"><i class='bx bx-arch'></i>
             </div>
             <div class="menu-title">Penduduk</div>
         </a>
     </li>
     <li>
-        <a href="widgets.html">
+        <a href="{{ route('keluarga.index') }}">
             <div class="parent-icon"><i class='bx bx-id-card'></i>
             </div>
             <div class="menu-title">Keluarga</div>
