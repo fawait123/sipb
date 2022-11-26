@@ -11,4 +11,16 @@ class Bantuan extends Model
 
 
     protected $guarded = ['id'];
+
+
+    public function jenis()
+    {
+        return $this->belongsTo(JenisBantuan::class,'id_jenis_bantuan');
+    }
+
+
+    public function userInput()
+    {
+        return $this->belongsTo(User::class,'id_user_input');
+    }
 }

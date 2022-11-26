@@ -9,6 +9,7 @@ use App\Http\Controllers\KecamatanController;
 use App\Http\Controllers\DesaController;
 use App\Http\Controllers\PendudukController;
 use App\Http\Controllers\KeluargaController;
+use App\Http\Controllers\BantuanPkhController;;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,4 +41,10 @@ Route::group(['prefix'=>'masterdata'],function(){
     Route::get('/keluarga/findPenduduk',[KeluargaController::class,'findPenduduk'])->name('keluarga.findPenduduk');
     Route::get('/keluarga/findKeluarga',[KeluargaController::class,'findKeluarga'])->name('keluarga.findKeluarga');
     Route::resource('keluarga',KeluargaController::class);
+});
+
+
+// bantuan pkh
+Route::group(['prefix'=>'bantuan'],function(){
+    Route::resource('pkh',BantuanPkhController::class);
 });
