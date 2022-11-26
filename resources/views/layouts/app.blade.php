@@ -11,6 +11,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="{{ asset('assets') }}/images/favicon-32x32.png" type="image/png" />
     <!--plugins-->
+    <link href="{{ asset('assets') }}/plugins/select2/css/select2.min.css" rel="stylesheet" />
+    <link href="{{ asset('assets') }}/plugins/select2/css/select2-bootstrap4.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('assets') }}/plugins/notifications/css/lobibox.min.css" />
     <link href="{{ asset('assets') }}/plugins/simplebar/css/simplebar.css" rel="stylesheet" />
     <link href="{{ asset('assets') }}/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet" />
@@ -29,6 +31,25 @@
     <link rel="stylesheet" href="{{ asset('assets') }}/css/semi-dark.css" />
     <link rel="stylesheet" href="{{ asset('assets') }}/css/header-colors.css" />
     @livewireStyles
+    <style>
+        .personsMenu,
+        .no-results {
+            display: none;
+        }
+
+        .item {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .item:hover {
+            background-color: #CCC;
+        }
+
+        .item p {
+            margin: 0;
+        }
+    </style>
     <title>Rocker - Bootstrap 5 Admin Dashboard Template</title>
 </head>
 
@@ -557,6 +578,16 @@
     <script src="{{ asset('assets') }}/plugins/notifications/js/notification-custom-script.js"></script>
     <!--app JS-->
     <script src="{{ asset('assets') }}/js/app.js"></script>
+    <script src="{{ asset('assets') }}/plugins/select2/js/select2.min.js"></script>
+    <script>
+        $('.single-select').select2({
+            theme: 'bootstrap4',
+            width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
+            placeholder: $(this).data('placeholder'),
+            allowClear: Boolean($(this).data('allow-clear')),
+        });
+    </script>
+    @stack('customjs')
     @if ($message = Session::get('message'))
         <script>
             info_noti("{{ $message }}")

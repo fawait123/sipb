@@ -9,4 +9,9 @@ class Keluarga extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
+
+    public function penduduks()
+    {
+        return $this->hasMany(Penduduk::class,'id_keluarga');
+    }
 }
