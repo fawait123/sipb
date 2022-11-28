@@ -39,6 +39,10 @@
                                     <td>{{ $row->keterangan_bantuan }}</td>
                                     <td>{{ $row->created_at->diffForHumans() }}</td>
                                     <td>
+                                        @if (auth()->user()->jabatan == 'admin kecamatan')
+                                            <a href="{{ route('pkh.form.verify', $row->id) }}" class="text-warning"><i
+                                                    style="font-size: 19px" class="bx bx-donate-blood"></i></a>
+                                        @endif
                                         <a href="{{ route('pkh.edit', $row->id) }}" class="text-primary"><i
                                                 style="font-size: 19px" class="bx bx-message-square-edit"></i></a>
                                         <a href="{{ route('pkh.destroy', $row->id) }}"

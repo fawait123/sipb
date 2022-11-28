@@ -149,4 +149,52 @@ class BantuanPkhController extends Controller
 
         return redirect()->route('pkh.index')->with(['message'=>'Hapus PKH berhasil']);
     }
+
+    public function formVerify($id)
+    {
+        $bantuans = Bantuan::with('detail.penduduk')->where('id',$id)->first();
+        $data = [];
+        foreach($bantuans->detail as $bantuan){
+            array_push($data,[
+                'id'=>$bantuan->penduduk->id,
+                'nik'=>$bantuan->penduduk->nik,
+                'nama'=>$bantuan->penduduk->nama,
+                'tempat_lahir'=>$bantuan->penduduk->tempat_lahir,
+                'tgl_lahir'=>$bantuan->penduduk->tgl_lahir,
+                'jk'=>$bantuan->penduduk->jk,
+                'agama'=>$bantuan->penduduk->agama->agama,
+                'status_kawin'=>$bantuan->penduduk->status_kawin,
+                'kewarganegaraan'=>$bantuan->penduduk->kewarganegaraan,
+                'check'=>false
+            ]);
+        }
+        // dd($data);
+        if($bantuans){
+            return view('pages.bantuan.pkh.verify',[
+                'penduduk' =>Penduduk::with('agama')->get(),
+                'pkh'=>$bantuans,
+                'data'=>$data,
+                'id'=>$bantuan->id
+    ]);
+        }
+
+        return abort(404);
+    }
+
+    public function verifyBantuan(Request $request,$id)
+    {
+        Bantuan::where('id',$id)->update([
+            'keterangan_bantuan' => 'Diverifikasi',
+        ]);
+
+        foreach(json_decode($request->data) as $bantuan){
+            $verif = $bantuan->check == true ? 'Diterima' : 'Ditolak';
+            DetailBantuan::where('id_penduduk',$bantuan->id)->update([
+                'status_pengajuan'=> $verif,
+                'id_user_verifikator'=>auth()->user()->id
+            ]);
+        }
+
+        return redirect()->route('pkh.index')->with(['message'=>'Verifikasi bantuan PKH berhasil']);
+    }
 }

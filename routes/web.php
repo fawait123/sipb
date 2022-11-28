@@ -46,5 +46,7 @@ Route::group(['prefix'=>'masterdata'],function(){
 
 // bantuan pkh
 Route::group(['prefix'=>'bantuan'],function(){
+    Route::post('/verify/{id}',[BantuanPkhController::class,'verifyBantuan'])->name('pkh.verify');
+    Route::get('/verify/{id}',[BantuanPkhController::class,'formVerify'])->name('pkh.form.verify');
     Route::resource('pkh',BantuanPkhController::class);
 });
