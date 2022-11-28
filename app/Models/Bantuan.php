@@ -11,6 +11,7 @@ class Bantuan extends Model
 
 
     protected $guarded = ['id'];
+    protected $table = 'bantuans';
 
 
     public function jenis()
@@ -22,5 +23,10 @@ class Bantuan extends Model
     public function userInput()
     {
         return $this->belongsTo(User::class,'id_user_input');
+    }
+
+    public function detail()
+    {
+        return $this->hasMany(DetailBantuan::class,'id_bantuan');
     }
 }

@@ -82,7 +82,32 @@ class BantuanPkhController extends Controller
      */
     public function edit($id)
     {
-        //
+        $bantuans = Bantuan::with('detail.penduduk')->where('id',$id)->first();
+        $data = [];
+        foreach($bantuans->detail as $bantuan){
+            array_push($data,[
+                'id'=>$bantuan->penduduk->id,
+                'nik'=>$bantuan->penduduk->nik,
+                'nama'=>$bantuan->penduduk->nama,
+                'tempat_lahir'=>$bantuan->penduduk->tempat_lahir,
+                'tgl_lahir'=>$bantuan->penduduk->tgl_lahir,
+                'jk'=>$bantuan->penduduk->jk,
+                'agama'=>$bantuan->penduduk->agama->agama,
+                'status_kawin'=>$bantuan->penduduk->status_kawin,
+                'kewarganegaraan'=>$bantuan->penduduk->kewarganegaraan,
+            ]);
+        }
+        // dd($data);
+        if($bantuans){
+            return view('pages.bantuan.pkh.form',[
+                'penduduk' =>Penduduk::with('agama')->get(),
+                'pkh'=>$bantuans,
+                'data'=>$data,
+                'id'=>$bantuan->id
+            ]);
+        }
+
+        return abort(404);
     }
 
     /**
@@ -94,7 +119,21 @@ class BantuanPkhController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        Bantuan::where('id',$id)->update([
+            'tgl_pengajuan'=>$request->tgl_pengajuan,
+            'id_user_input'=>auth()->user()->id,
+        ]);
+        DetailBantuan::where('id_bantuan',$id)->delete();
+        foreach(json_decode($request->data) as $item){
+            DetailBantuan::create([
+                'id_penduduk'=>$item->id,
+                'id_bantuan'=>$id,
+                'status_pengajuan'=>'Sedang diajukan',
+                'id_user_verifikator'=>null
+            ]);
+        }
+
+        return redirect()->route('pkh.index')->with(['message'=>'Update PKH berhasil']);
     }
 
     /**
@@ -105,6 +144,9 @@ class BantuanPkhController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Bantuan::where('id',$id)->delete();
+        DetailBantuan::where('id_bantuan',$id)->delete();
+
+        return redirect()->route('pkh.index')->with(['message'=>'Hapus PKH berhasil']);
     }
 }

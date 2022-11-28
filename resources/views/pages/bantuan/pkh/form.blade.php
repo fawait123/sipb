@@ -11,7 +11,8 @@
                 <div class="form-group">
                     <label for="no_surat">Nomor Surat</label>
                     <input type="text" name="no_surat" class="form-control @error('no_surat') is-invalid @enderror"
-                        placeholder="no_surat" value="{{ isset($id) ? $pkh->no_surat : old('no_surat') }}">
+                        placeholder="no_surat" value="{{ isset($id) ? $pkh->no_surat : old('no_surat') }}"
+                        {{ isset($id) ? 'disabled' : '' }}>
                     @error('no_surat')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -25,7 +26,7 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                <input type="hidden" name="data">
+                <input type="hidden" name="data" value="{{ isset($id) ? json_encode($data) : old('data') }}">
 
                 <button type="button" class="btn btn-dark btn-sm mt-3" data-bs-toggle="modal"
                     data-bs-target="#exampleVerticallycenteredModal">Tambah Penduduk</button>
@@ -106,7 +107,7 @@
             let status_kawin = $(this).find(':selected').data('status_kawin');
             let kewarganegaraan = $(this).find(':selected').data('kewarganegaraan');
 
-            let check = data.find((el) => el.nik === nik)
+            let check = data.find((el) => el.nik == nik)
             if (check) {
                 $("#exampleVerticallycenteredModal").modal('hide')
                 setTimeout(() => {
@@ -145,20 +146,49 @@
                 $("#tbody").html(tbody)
                 $("input[name='data']").val(JSON.stringify(data));
                 $("#exampleVerticallycenteredModal").modal('hide')
-
             }
         })
 
         $(document).on('click', '.remove', function() {
             let nik = $(this).data('nik')
             const indexOfObject = data.findIndex(object => {
-                return object.nik === nik;
+                return object.nik == nik;
             });
 
             data.splice(indexOfObject, 1)
 
             let parent = $(this).parent().parent()
             $(parent).remove()
+            $("input[name='data']").val(JSON.stringify(data));
         })
     </script>
 @endpush
+
+@if (isset($id))
+    @push('customjs')
+        <script>
+            let dataPenduduk = $("input[name='data']").val()
+            dataPenduduk = JSON.parse(dataPenduduk)
+            // data = dataPenduduk
+            dataPenduduk.map((el, index) => {
+                data.push(el)
+                tbody += `
+                    <tr>
+                                    <td>${el.nik}</td>
+                                    <td>${el.nama}</td>
+                                    <td>${el.tempat_lahir + ' '+el.tgl_lahir}</td>
+                                    <td>${el.jk}</td>
+                                    <td>${el.agama}</td>
+                                    <td>${el.status_kawin}</td>
+                                    <td>${el.kewarganegaraan}</td>
+                                    <td>
+                                        <a class="text-danger remove" href="#" data-nik="${el.nik}">hapus<a/a>
+                                    </td>
+                                </tr>
+                    `;
+            })
+
+            $("#tbody").html(tbody)
+        </script>
+    @endpush
+@endif
