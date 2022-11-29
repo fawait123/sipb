@@ -9,7 +9,8 @@ use App\Http\Controllers\KecamatanController;
 use App\Http\Controllers\DesaController;
 use App\Http\Controllers\PendudukController;
 use App\Http\Controllers\KeluargaController;
-use App\Http\Controllers\BantuanPkhController;;
+use App\Http\Controllers\BantuanPkhController;
+use App\Http\Controllers\BantuanBnptController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,9 +47,16 @@ Route::group(['prefix'=>'masterdata'],function(){
 
 // bantuan pkh
 Route::group(['prefix'=>'bantuan'],function(){
-    Route::get('/bagikan/aksi',[BantuanPkhController::class,'bagikanBantuanAction'])->name('pkh.bagikan.aksi');
-    Route::get('/bagikan/{id}',[BantuanPkhController::class,'bagikanBantuan'])->name('pkh.bagikan');
-    Route::post('/verify/{id}',[BantuanPkhController::class,'verifyBantuan'])->name('pkh.verify');
-    Route::get('/verify/{id}',[BantuanPkhController::class,'formVerify'])->name('pkh.form.verify');
+    // pkh
+    Route::get('/pkh/bagikan/aksi',[BantuanPkhController::class,'bagikanBantuanAction'])->name('pkh.bagikan.aksi');
+    Route::get('/pkh/bagikan/{id}',[BantuanPkhController::class,'bagikanBantuan'])->name('pkh.bagikan');
+    Route::post('/pkh/verify/{id}',[BantuanPkhController::class,'verifyBantuan'])->name('pkh.verify');
+    Route::get('/pkh/verify/{id}',[BantuanPkhController::class,'formVerify'])->name('pkh.form.verify');
     Route::resource('pkh',BantuanPkhController::class);
+    // bnpt
+    Route::get('/bnpt/bagikan/aksi',[BantuanBnptController::class,'bagikanBantuanAction'])->name('bnpt.bagikan.aksi');
+    Route::get('/bnpt/bagikan/{id}',[BantuanBnptController::class,'bagikanBantuan'])->name('bnpt.bagikan');
+    Route::post('/bnpt/verify/{id}',[BantuanBnptController::class,'verifyBantuan'])->name('bnpt.verify');
+    Route::get('/bnpt/verify/{id}',[BantuanBnptController::class,'formVerify'])->name('bnpt.form.verify');
+    Route::resource('bnpt',BantuanBnptController::class);
 });

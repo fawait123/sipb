@@ -59,7 +59,7 @@
     </li>
     <li class="menu-label">Pengajuan Bantuan</li>
     <li>
-        <a href="widgets.html">
+        <a href="{{ route('bnpt.index') }}">
             <div class="parent-icon"><i class='bx bx-money'></i>
             </div>
             <div class="menu-title">BNPT</div>
