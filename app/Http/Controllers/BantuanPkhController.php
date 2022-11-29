@@ -44,7 +44,7 @@ class BantuanPkhController extends Controller
 
         $bantuan = Bantuan::create([
             'id_jenis_bantuan'=>$jenis ? $jenis->id : 1,
-            'keterangan_bantuan'=>'Diajukan',
+            'status'=>'Diajukan',
             'tgl_pengajuan'=>$request->tgl_pengajuan,
             'no_surat'=>$request->no_surat,
             'id_user_input'=>auth()->user()->id,
@@ -71,7 +71,34 @@ class BantuanPkhController extends Controller
      */
     public function show($id)
     {
-        //
+        $bantuans = Bantuan::with(['detail.penduduk','detail.verifikator'])->where('id',$id)->first();
+        $data = [];
+        foreach($bantuans->detail as $bantuan){
+            array_push($data,[
+                'id'=>$bantuan->penduduk->id,
+                'nik'=>$bantuan->penduduk->nik,
+                'nama'=>$bantuan->penduduk->nama,
+                'tempat_lahir'=>$bantuan->penduduk->tempat_lahir,
+                'tgl_lahir'=>$bantuan->penduduk->tgl_lahir,
+                'jk'=>$bantuan->penduduk->jk,
+                'agama'=>$bantuan->penduduk->agama->agama,
+                'status_kawin'=>$bantuan->penduduk->status_kawin,
+                'kewarganegaraan'=>$bantuan->penduduk->kewarganegaraan,
+                'status'=>$bantuan->status_pengajuan,
+                'verifikator'=>$bantuan->verifikator->nama
+            ]);
+        }
+
+        if($bantuans){
+            return view('pages.bantuan.pkh.show',[
+                'penduduk' =>Penduduk::with('agama')->get(),
+                'pkh'=>$bantuans,
+                'data'=>$data,
+                'id'=>$bantuan->id
+            ]);
+        }
+
+        return abort(404);
     }
 
     /**
@@ -184,7 +211,7 @@ class BantuanPkhController extends Controller
     public function verifyBantuan(Request $request,$id)
     {
         Bantuan::where('id',$id)->update([
-            'keterangan_bantuan' => 'Diverifikasi',
+            'status' => 'Diverifikasi',
         ]);
 
         foreach(json_decode($request->data) as $bantuan){
@@ -196,5 +223,58 @@ class BantuanPkhController extends Controller
         }
 
         return redirect()->route('pkh.index')->with(['message'=>'Verifikasi bantuan PKH berhasil']);
+    }
+
+    public function bagikanBantuan($id)
+    {
+        $bantuans = Bantuan::with('detail.penduduk')->where('id',$id)->first();
+        $data = [];
+        foreach($bantuans->detail as $bantuan){
+            array_push($data,[
+                'id'=>$bantuan->penduduk->id,
+                'nik'=>$bantuan->penduduk->nik,
+                'nama'=>$bantuan->penduduk->nama,
+                'tempat_lahir'=>$bantuan->penduduk->tempat_lahir,
+                'tgl_lahir'=>$bantuan->penduduk->tgl_lahir,
+                'jk'=>$bantuan->penduduk->jk,
+                'agama'=>$bantuan->penduduk->agama->agama,
+                'status_kawin'=>$bantuan->penduduk->status_kawin,
+                'kewarganegaraan'=>$bantuan->penduduk->kewarganegaraan,
+                'status'=>$bantuan->status_pengajuan,
+                'check'=>$bantuan->status_pengajuan == 'Sudah Dibagikan' ? true : false
+            ]);
+        }
+        // dd($data);
+        if($bantuans){
+            return view('pages.bantuan.pkh.donate',[
+                'penduduk' =>Penduduk::with('agama')->get(),
+                'pkh'=>$bantuans,
+                'data'=>$data,
+                'id'=>$bantuan->id
+            ]);
+        }
+
+        return abort(404);
+    }
+
+
+    public function bagikanBantuanAction(Request $request)
+    {
+        if($request->filled("data")){
+            DetailBantuan::whereIn('id_penduduk',$request->data)->update([
+                'status_pengajuan'=> 'Sudah Dibagikan'
+            ]);
+
+            return 'success';
+        }
+
+        if($request->filled("id_penduduk")){
+            DetailBantuan::where('id_penduduk',$request->id_penduduk)->update([
+                'status_pengajuan'=> 'Sudah Dibagikan'
+            ]);
+            return 'success';
+        }
+
+        return 'success';
     }
 }
