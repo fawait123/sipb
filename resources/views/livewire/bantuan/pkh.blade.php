@@ -43,17 +43,25 @@
                                             <a href="{{ route('pkh.form.verify', $row->id) }}" class="text-warning"><i
                                                     style="font-size: 19px" class="bx bx-donate-blood"></i></a>
                                         @endif
-                                        <a href="{{ route('pkh.edit', $row->id) }}" class="text-primary"><i
-                                                style="font-size: 19px" class="bx bx-message-square-edit"></i></a>
-                                        <a href="{{ route('pkh.destroy', $row->id) }}"
-                                            onclick="event.preventDefault();return confirm('Yakin ingin menghapus data ?') ?document.getElementById('form-delete{{ $row->id }}').submit() : null"
-                                            class="text-danger"><i style="font-size: 19px"
-                                                class="bx bx-trash-alt"></i></a>
-                                        <form action="{{ route('pkh.destroy', $row->id) }}" method="post"
-                                            id="form-delete{{ $row->id }}">
-                                            @csrf
-                                            @method('delete')
-                                        </form>
+                                        @if ($row->status != 'Diverifikasi')
+                                            <a href="{{ route('pkh.edit', $row->id) }}" class="text-primary"><i
+                                                    style="font-size: 19px" class="bx bx-message-square-edit"></i></a>
+                                            <a href="{{ route('pkh.destroy', $row->id) }}"
+                                                onclick="event.preventDefault();return confirm('Yakin ingin menghapus data ?') ?document.getElementById('form-delete{{ $row->id }}').submit() : null"
+                                                class="text-danger"><i style="font-size: 19px"
+                                                    class="bx bx-trash-alt"></i></a>
+                                            <form action="{{ route('pkh.destroy', $row->id) }}" method="post"
+                                                id="form-delete{{ $row->id }}">
+                                                @csrf
+                                                @method('delete')
+                                            </form>
+                                        @endif
+                                        @if (auth()->user()->jabatan == 'admin desa' && $row->status == 'Diverifikasi')
+                                            <a href="{{ route('pkh.bagikan', $row->id) }}" class="text-dark"><i
+                                                    style="font-size: 19px" class="bx bx-donate-heart"></i></a>
+                                        @endif
+                                        <a href="{{ route('pkh.show', $row->id) }}" class="text-success"><i
+                                                style="font-size: 19px" class="bx bx-info-square"></i></a>
                                     </td>
                                 </tr>
                             @endforeach

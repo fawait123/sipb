@@ -16,4 +16,9 @@ class DetailBantuan extends Model
     {
         return $this->belongsTo(Penduduk::class,'id_penduduk');
     }
+
+    public function verifikator()
+    {
+        return $this->belongsTo(User::class,'id_user_verifikator');
+    }
 }
