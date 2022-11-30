@@ -32,9 +32,10 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/home/cart', [HomeController::class, 'cart'])->name('home.cart');
 
 // route agama
-Route::group(['prefix'=>'masterdata'],function(){
+Route::group(['prefix'=>'masterdata','middleware'=>'auth'],function(){
     Route::resource('agama',AgamaController::class);
     Route::resource('pekerjaan',PekerjaanController::class);
     Route::resource('kabupaten',KabupatenController::class);
@@ -48,7 +49,7 @@ Route::group(['prefix'=>'masterdata'],function(){
 
 
 // bantuan pkh
-Route::group(['prefix'=>'bantuan'],function(){
+Route::group(['prefix'=>'bantuan','middleware'=>'auth'],function(){
     // pkh
     Route::post('/pkh/konfirmasi/{id}',[BantuanPkhController::class,'konfirmasi'])->name('pkh.konfirmasi');
     Route::get('/pkh/bagikan/aksi',[BantuanPkhController::class,'bagikanBantuanAction'])->name('pkh.bagikan.aksi');
@@ -66,7 +67,7 @@ Route::group(['prefix'=>'bantuan'],function(){
 });
 
 // laporan
-Route::group(['prefix'=>'laporan'],function(){
+Route::group(['prefix'=>'laporan','middleware'=>'auth'],function(){
     Route::get('pkh',[LaporanPkhController::class,'index'])->name('report.pkh');
     Route::get('bpnt',[LaporanBnptController::class,'index'])->name('report.bpnt');
 });

@@ -50,7 +50,7 @@
             margin: 0;
         }
     </style>
-    <title>Rocker - Bootstrap 5 Admin Dashboard Template</title>
+    <title>Sistem Penerimaan Bantuan - Bootstrap 5 Admin Dashboard Template</title>
 </head>
 
 <body>
