@@ -13,7 +13,7 @@ class LaporanBnptController extends Controller
      */
     public function index()
     {
-        //
+        return view('pages.report.bnpt.index');
     }
 
     /**

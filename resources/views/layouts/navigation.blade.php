@@ -74,7 +74,7 @@
     </li>
     <li class="menu-label">Laporan</li>
     <li>
-        <a href="widgets.html">
+        <a href="{{ route('report.bpnt') }}">
             <div class="parent-icon"><i class='bx bx-task'></i>
             </div>
             <div class="menu-title">BPNT</div>

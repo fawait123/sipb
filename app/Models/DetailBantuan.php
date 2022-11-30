@@ -21,4 +21,9 @@ class DetailBantuan extends Model
     {
         return $this->belongsTo(User::class,'id_user_verifikator');
     }
+
+    public function bantuan()
+    {
+        return $this->belongsTo(Bantuan::class,'id_bantuan');
+    }
 }
