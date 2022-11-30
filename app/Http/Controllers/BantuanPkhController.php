@@ -48,7 +48,6 @@ class BantuanPkhController extends Controller
             'tgl_pengajuan'=>$request->tgl_pengajuan,
             'no_surat'=>$request->no_surat,
             'id_user_input'=>auth()->user()->id,
-            'status'=>null,
         ]);
 
         foreach(json_decode($request->data) as $item){
@@ -210,8 +209,10 @@ class BantuanPkhController extends Controller
 
     public function verifyBantuan(Request $request,$id)
     {
+        $bantuan = Bantuan::where('id',$id)->first();
         Bantuan::where('id',$id)->update([
             'status' => 'Diverifikasi',
+            'step'=> $bantuan->step + 1
         ]);
 
         foreach(json_decode($request->data) as $bantuan){
@@ -250,7 +251,7 @@ class BantuanPkhController extends Controller
                 'penduduk' =>Penduduk::with('agama')->get(),
                 'pkh'=>$bantuans,
                 'data'=>$data,
-                'id'=>$bantuan->id
+                'id'=>$bantuans->id
             ]);
         }
 
@@ -261,20 +262,39 @@ class BantuanPkhController extends Controller
     public function bagikanBantuanAction(Request $request)
     {
         if($request->filled("data")){
+            Bantuan::where('id',$request->id)->update([
+                'tgl_penerimaan'=>date('Y-m-d')
+            ]);
             DetailBantuan::whereIn('id_penduduk',$request->data)->update([
-                'status_pengajuan'=> 'Sudah Dibagikan'
+                'status_pengajuan'=> 'Sudah Disalurkan'
             ]);
 
             return 'success';
         }
 
         if($request->filled("id_penduduk")){
+            Bantuan::where('id',$request->id)->update([
+                'tgl_penerimaan'=>date('Y-m-d')
+            ]);
             DetailBantuan::where('id_penduduk',$request->id_penduduk)->update([
-                'status_pengajuan'=> 'Sudah Dibagikan'
+                'status_pengajuan'=> 'Sudah Disalurkan'
             ]);
             return 'success';
         }
 
         return 'success';
+    }
+
+    public function konfirmasi($id)
+    {
+        $bantuan = Bantuan::where('id',$id)->first();
+        if($bantuan){
+            Bantuan::where('id',$id)->update([
+                'status'=> 'Diverifikasi',
+                'step'=>$bantuan->step + 1
+            ]);
+            return redirect()->route('pkh.index')->with(['message'=>'Bantuan berhasil dikonfirmasi']);
+        }
+        return redirect()->route('pkh.index');
     }
 }

@@ -42,9 +42,9 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="form-group mt-5">
+                {{-- <div class="form-group mt-5">
                     <button type="submit" class="btn btn-primary btn-sm">{{ isset($id) ? 'Update' : 'Tambah' }}</button>
-                </div>
+                </div> --}}
             </form>
         </div>
     </div>
@@ -108,7 +108,7 @@
                 let checked = el.status === 'Sudah Dibagikan' ? 'checked disabled' : ''
                 tbody += `
                     <tr>
-                                    <td>${el.status === 'Ditolak' ? '<i style="font-size: 19px;color:red" class="bx bx-window-close"></i>' : '<input type="checkbox" class="verify" name="verify" data-nik="'+el.id+'" '+checked+'>'}</td>
+                                    <td>${el.status === 'Ditolak' ? '<i style="font-size: 19px;color:red" class="bx bx-window-close"></i>' : el.status==='Sudah Disalurkan' ? '<i style="font-size: 19px;color:green" class="bx bx-check-circle"></i>' : '<input type="checkbox" class="verify" name="verify" data-nik="'+el.id+'">'}</td>
                                     <td>${el.nik}</td>
                                     <td>${el.nama}</td>
                                     <td>${el.tempat_lahir + ' '+el.tgl_lahir}</td>
@@ -137,18 +137,19 @@
                     url: '{{ route('pkh.bagikan.aksi') }}',
                     method: 'get',
                     data: {
-                        data: nik
+                        data: nik,
+                        id: '{{ $id }}'
                     },
                     success: function(res) {
                         console.log(res)
                         data.filter((el) => el.status !== 'Ditolak').map((item, index) => {
                             let findIndex = data.findIndex((el) => el.nik == item.nik)
+                            data[findIndex].status = 'Sudah Disalurkan'
                             data[findIndex].check = true
                         })
                         window.location.reload();
                         checkAll(data)
                         $("#checkAll").prop('checked', true);
-                        // renderData(data)
                     }
                 })
             });
@@ -159,13 +160,17 @@
                     url: '{{ route('pkh.bagikan.aksi') }}',
                     method: 'get',
                     data: {
-                        id_penduduk: nik
+                        id_penduduk: nik,
+                        id: '{{ $id }}'
                     },
                     success: function(res) {
                         console.log(res)
                         $(this).prop('checked', true);
                         checkAll(data)
                         window.location.reload();
+                        let findIndex = data.findIndex((el) => el.id === nik)
+                        data[findIndex].status = 'Sudah Disalurkan'
+                        data[findIndex].check = true
                     }
                 })
             })
