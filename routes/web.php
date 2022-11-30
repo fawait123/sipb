@@ -11,6 +11,7 @@ use App\Http\Controllers\PendudukController;
 use App\Http\Controllers\KeluargaController;
 use App\Http\Controllers\BantuanPkhController;
 use App\Http\Controllers\BantuanBnptController;
+use App\Http\Controllers\LaporanPkhController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,4 +60,9 @@ Route::group(['prefix'=>'bantuan'],function(){
     Route::post('/bnpt/verify/{id}',[BantuanBnptController::class,'verifyBantuan'])->name('bnpt.verify');
     Route::get('/bnpt/verify/{id}',[BantuanBnptController::class,'formVerify'])->name('bnpt.form.verify');
     Route::resource('bnpt',BantuanBnptController::class);
+});
+
+// laporan
+Route::group(['prefix'=>'laporan'],function(){
+    Route::get('pkh',[LaporanPkhController::class,'index'])->name('report.pkh');
 });

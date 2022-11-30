@@ -81,7 +81,7 @@
         </a>
     </li>
     <li>
-        <a href="widgets.html">
+        <a href="{{ route('report.pkh') }}">
             <div class="parent-icon"><i class='bx bx-notification'></i>
             </div>
             <div class="menu-title">PKH</div>
