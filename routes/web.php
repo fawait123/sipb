@@ -49,17 +49,19 @@ Route::group(['prefix'=>'masterdata'],function(){
 // bantuan pkh
 Route::group(['prefix'=>'bantuan'],function(){
     // pkh
+    Route::post('/pkh/konfirmasi/{id}',[BantuanPkhController::class,'konfirmasi'])->name('pkh.konfirmasi');
     Route::get('/pkh/bagikan/aksi',[BantuanPkhController::class,'bagikanBantuanAction'])->name('pkh.bagikan.aksi');
     Route::get('/pkh/bagikan/{id}',[BantuanPkhController::class,'bagikanBantuan'])->name('pkh.bagikan');
     Route::post('/pkh/verify/{id}',[BantuanPkhController::class,'verifyBantuan'])->name('pkh.verify');
     Route::get('/pkh/verify/{id}',[BantuanPkhController::class,'formVerify'])->name('pkh.form.verify');
     Route::resource('pkh',BantuanPkhController::class);
     // bnpt
-    Route::get('/bnpt/bagikan/aksi',[BantuanBnptController::class,'bagikanBantuanAction'])->name('bnpt.bagikan.aksi');
-    Route::get('/bnpt/bagikan/{id}',[BantuanBnptController::class,'bagikanBantuan'])->name('bnpt.bagikan');
-    Route::post('/bnpt/verify/{id}',[BantuanBnptController::class,'verifyBantuan'])->name('bnpt.verify');
-    Route::get('/bnpt/verify/{id}',[BantuanBnptController::class,'formVerify'])->name('bnpt.form.verify');
-    Route::resource('bnpt',BantuanBnptController::class);
+    Route::post('/bpnt/konfirmasi/{id}',[BantuanPkhController::class,'konfirmasi'])->name('bpnt.konfirmasi');
+    Route::get('/bpnt/bagikan/aksi',[BantuanBnptController::class,'bagikanBantuanAction'])->name('bpnt.bagikan.aksi');
+    Route::get('/bpnt/bagikan/{id}',[BantuanBnptController::class,'bagikanBantuan'])->name('bpnt.bagikan');
+    Route::post('/bpnt/verify/{id}',[BantuanBnptController::class,'verifyBantuan'])->name('bpnt.verify');
+    Route::get('/bpnt/verify/{id}',[BantuanBnptController::class,'formVerify'])->name('bpnt.form.verify');
+    Route::resource('bpnt',BantuanBnptController::class);
 });
 
 // laporan

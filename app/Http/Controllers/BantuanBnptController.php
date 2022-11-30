@@ -6,14 +6,9 @@ use Illuminate\Http\Request;
 
 class BantuanBnptController extends Controller
 {
-     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        return view('pages.bantuan.bnpt.index');
+        return view('pages.bantuan.bpnt.index');
     }
 
     /**
@@ -23,7 +18,7 @@ class BantuanBnptController extends Controller
      */
     public function create()
     {
-        return view('pages.bantuan.bnpt.form',[
+        return view('pages.bantuan.bpnt.form',[
             'penduduk' =>Penduduk::with('agama')->get()
         ]);
     }
@@ -36,7 +31,7 @@ class BantuanBnptController extends Controller
      */
     public function store(Request $request)
     {
-        $jenis = JenisBantuan::where('nama_bantuan','like','%bnpt%')->first();
+        $jenis = JenisBantuan::where('nama_bantuan','like','%bpnt%')->first();
 
         $bantuan = Bantuan::create([
             'id_jenis_bantuan'=>$jenis ? $jenis->id : 1,
@@ -44,7 +39,6 @@ class BantuanBnptController extends Controller
             'tgl_pengajuan'=>$request->tgl_pengajuan,
             'no_surat'=>$request->no_surat,
             'id_user_input'=>auth()->user()->id,
-            'status'=>null,
         ]);
 
         foreach(json_decode($request->data) as $item){
@@ -56,7 +50,7 @@ class BantuanBnptController extends Controller
             ]);
         }
 
-        return redirect()->route('bnpt.index')->with(['message'=>'Pengajuan bnpt berhasil ditambahkan']);
+        return redirect()->route('bpnt.index')->with(['message'=>'Pengajuan bpnt berhasil ditambahkan']);
     }
 
     /**
@@ -86,9 +80,9 @@ class BantuanBnptController extends Controller
         }
 
         if($bantuans){
-            return view('pages.bantuan.bnpt.show',[
+            return view('pages.bantuan.bpnt.show',[
                 'penduduk' =>Penduduk::with('agama')->get(),
-                'bnpt'=>$bantuans,
+                'bpnt'=>$bantuans,
                 'data'=>$data,
                 'id'=>$bantuan->id
             ]);
@@ -122,9 +116,9 @@ class BantuanBnptController extends Controller
         }
         // dd($data);
         if($bantuans){
-            return view('pages.bantuan.bnpt.form',[
+            return view('pages.bantuan.bpnt.form',[
                 'penduduk' =>Penduduk::with('agama')->get(),
-                'bnpt'=>$bantuans,
+                'bpnt'=>$bantuans,
                 'data'=>$data,
                 'id'=>$bantuan->id
             ]);
@@ -156,7 +150,7 @@ class BantuanBnptController extends Controller
             ]);
         }
 
-        return redirect()->route('bnpt.index')->with(['message'=>'Update bnpt berhasil']);
+        return redirect()->route('bpnt.index')->with(['message'=>'Update bpnt berhasil']);
     }
 
     /**
@@ -170,7 +164,7 @@ class BantuanBnptController extends Controller
         Bantuan::where('id',$id)->delete();
         DetailBantuan::where('id_bantuan',$id)->delete();
 
-        return redirect()->route('bnpt.index')->with(['message'=>'Hapus bnpt berhasil']);
+        return redirect()->route('bpnt.index')->with(['message'=>'Hapus bpnt berhasil']);
     }
 
     public function formVerify($id)
@@ -193,9 +187,9 @@ class BantuanBnptController extends Controller
         }
         // dd($data);
         if($bantuans){
-            return view('pages.bantuan.bnpt.verify',[
+            return view('pages.bantuan.bpnt.verify',[
                 'penduduk' =>Penduduk::with('agama')->get(),
-                'bnpt'=>$bantuans,
+                'bpnt'=>$bantuans,
                 'data'=>$data,
                 'id'=>$bantuan->id
     ]);
@@ -206,8 +200,10 @@ class BantuanBnptController extends Controller
 
     public function verifyBantuan(Request $request,$id)
     {
+        $bantuan = Bantuan::where('id',$id)->first();
         Bantuan::where('id',$id)->update([
             'status' => 'Diverifikasi',
+            'step'=> $bantuan->step + 1
         ]);
 
         foreach(json_decode($request->data) as $bantuan){
@@ -218,7 +214,7 @@ class BantuanBnptController extends Controller
             ]);
         }
 
-        return redirect()->route('bnpt.index')->with(['message'=>'Verifikasi bantuan bnpt berhasil']);
+        return redirect()->route('bpnt.index')->with(['message'=>'Verifikasi bantuan bpnt berhasil']);
     }
 
     public function bagikanBantuan($id)
@@ -242,11 +238,11 @@ class BantuanBnptController extends Controller
         }
         // dd($data);
         if($bantuans){
-            return view('pages.bantuan.bnpt.donate',[
+            return view('pages.bantuan.bpnt.donate',[
                 'penduduk' =>Penduduk::with('agama')->get(),
-                'bnpt'=>$bantuans,
+                'bpnt'=>$bantuans,
                 'data'=>$data,
-                'id'=>$bantuan->id
+                'id'=>$bantuans->id
             ]);
         }
 
@@ -257,20 +253,39 @@ class BantuanBnptController extends Controller
     public function bagikanBantuanAction(Request $request)
     {
         if($request->filled("data")){
+            Bantuan::where('id',$request->id)->update([
+                'tgl_penerimaan'=>date('Y-m-d')
+            ]);
             DetailBantuan::whereIn('id_penduduk',$request->data)->update([
-                'status_pengajuan'=> 'Sudah Dibagikan'
+                'status_pengajuan'=> 'Sudah Disalurkan'
             ]);
 
             return 'success';
         }
 
         if($request->filled("id_penduduk")){
+            Bantuan::where('id',$request->id)->update([
+                'tgl_penerimaan'=>date('Y-m-d')
+            ]);
             DetailBantuan::where('id_penduduk',$request->id_penduduk)->update([
-                'status_pengajuan'=> 'Sudah Dibagikan'
+                'status_pengajuan'=> 'Sudah Disalurkan'
             ]);
             return 'success';
         }
 
         return 'success';
+    }
+
+    public function konfirmasi($id)
+    {
+        $bantuan = Bantuan::where('id',$id)->first();
+        if($bantuan){
+            Bantuan::where('id',$id)->update([
+                'status'=> 'Diverifikasi',
+                'step'=>$bantuan->step + 1
+            ]);
+            return redirect()->route('bpnt.index')->with(['message'=>'Bantuan berhasil dikonfirmasi']);
+        }
+        return redirect()->route('bpnt.index');
     }
 }

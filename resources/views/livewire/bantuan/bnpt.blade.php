@@ -3,7 +3,7 @@
         <div class="card-body">
             <div class="d-flex align-items-center">
                 <div>
-                    <a href="{{ route('bnpt.create') }}" class="btn btn-primary btn-sm">Tambah</a>
+                    <a href="{{ route('bpnt.create') }}" class="btn btn-primary btn-sm">Tambah</a>
                 </div>
                 <div class="ms-auto">
                     <input type="text" class="form-control" wire:model="search" placeholder="Search...">
@@ -40,27 +40,27 @@
                                     <td>{{ $row->created_at->diffForHumans() }}</td>
                                     <td>
                                         @if (auth()->user()->jabatan == 'admin kecamatan')
-                                            <a href="{{ route('bnpt.form.verify', $row->id) }}" class="text-warning"><i
+                                            <a href="{{ route('bpnt.form.verify', $row->id) }}" class="text-warning"><i
                                                     style="font-size: 19px" class="bx bx-donate-blood"></i></a>
                                         @endif
                                         @if ($row->status != 'Diverifikasi')
-                                            <a href="{{ route('bnpt.edit', $row->id) }}" class="text-primary"><i
+                                            <a href="{{ route('bpnt.edit', $row->id) }}" class="text-primary"><i
                                                     style="font-size: 19px" class="bx bx-message-square-edit"></i></a>
-                                            <a href="{{ route('bnpt.destroy', $row->id) }}"
+                                            <a href="{{ route('bpnt.destroy', $row->id) }}"
                                                 onclick="event.preventDefault();return confirm('Yakin ingin menghapus data ?') ?document.getElementById('form-delete{{ $row->id }}').submit() : null"
                                                 class="text-danger"><i style="font-size: 19px"
                                                     class="bx bx-trash-alt"></i></a>
-                                            <form action="{{ route('bnpt.destroy', $row->id) }}" method="post"
+                                            <form action="{{ route('bpnt.destroy', $row->id) }}" method="post"
                                                 id="form-delete{{ $row->id }}">
                                                 @csrf
                                                 @method('delete')
                                             </form>
                                         @endif
                                         @if (auth()->user()->jabatan == 'admin desa' && $row->status == 'Diverifikasi')
-                                            <a href="{{ route('bnpt.bagikan', $row->id) }}" class="text-dark"><i
+                                            <a href="{{ route('bpnt.bagikan', $row->id) }}" class="text-dark"><i
                                                     style="font-size: 19px" class="bx bx-donate-heart"></i></a>
                                         @endif
-                                        <a href="{{ route('bnpt.show', $row->id) }}" class="text-success"><i
+                                        <a href="{{ route('bpnt.show', $row->id) }}" class="text-success"><i
                                                 style="font-size: 19px" class="bx bx-info-square"></i></a>
                                     </td>
                                 </tr>

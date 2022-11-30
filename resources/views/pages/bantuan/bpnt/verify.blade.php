@@ -3,12 +3,12 @@
 @section('content')
     <div class="card radius-10">
         <div class="card-body">
-            <form action="{{ isset($id) ? route('bnpt.verify', $bnpt->id) : route('bnpt.store') }}" method="post">
+            <form action="{{ isset($id) ? route('bpnt.verify', $bpnt->id) : route('bpnt.store') }}" method="post">
                 @csrf
                 <div class="form-group">
                     <label for="no_surat">Nomor Surat</label>
                     <input type="text" name="no_surat" class="form-control @error('no_surat') is-invalid @enderror"
-                        placeholder="no_surat" value="{{ isset($id) ? $bnpt->no_surat : old('no_surat') }}"
+                        placeholder="no_surat" value="{{ isset($id) ? $bpnt->no_surat : old('no_surat') }}"
                         {{ isset($id) ? 'disabled' : '' }}>
                     @error('no_surat')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -18,7 +18,7 @@
                     <label for="tgl_pengajuan">Tanggal Pengajuan</label>
                     <input type="date" name="tgl_pengajuan"
                         class="form-control @error('tgl_pengajuan') is-invalid @enderror" placeholder="tgl_pengajuan"
-                        value="{{ isset($id) ? $bnpt->tgl_pengajuan : old('tgl_pengajuan') }}" disabled>
+                        value="{{ isset($id) ? $bpnt->tgl_pengajuan : old('tgl_pengajuan') }}" disabled>
                     @error('tgl_pengajuan')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -28,6 +28,7 @@
                     <table class="table table-bordered table-striped mt-3">
                         <thead>
                             <tr>
+                                <th><input type="checkbox" id="checkAll"></th>
                                 <th>NIK</th>
                                 <th>Nama</th>
                                 <th>TTL</th>
@@ -35,13 +36,14 @@
                                 <th>Agama</th>
                                 <th>Status</th>
                                 <th>Kewarganegaraan</th>
-                                <th>Diverifikasi oleh</th>
-                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody id="tbody">
                         </tbody>
                     </table>
+                </div>
+                <div class="form-group mt-5">
+                    <button type="submit" class="btn btn-primary btn-sm">{{ isset($id) ? 'Update' : 'Tambah' }}</button>
                 </div>
             </form>
         </div>
@@ -97,6 +99,7 @@
             })
             tbody += `
                     <tr>
+                                    <td><input type="checkbox" name="verify" data-nik="${el.nik}"></td>
                                     <td>${el.nik}</td>
                                     <td>${el.nama}</td>
                                     <td>${el.tempat_lahir + ' '+el.tgl_lahir}</td>
@@ -104,12 +107,47 @@
                                     <td>${el.agama}</td>
                                     <td>${el.status_kawin}</td>
                                     <td>${el.kewarganegaraan}</td>
-                                    <td>${el.verifikator}</td>
-                                    <td>${el.status === 'Ditolak' ? '<span class="badge bg-danger">'+el.status+'</span>':'<span class="badge bg-primary">'+el.status+'</span>'}</td>
                                 </tr>
                     `;
         })
 
         $("#tbody").html(tbody)
+
+        // chek all
+        $("#checkAll").change(function() {
+            if ($(this).is(':checked')) {
+                $("input[name='verify']").prop('checked', true);
+                for (let i = 0; i < data.length; i++) {
+                    data[i].check = true;
+                }
+                $("input[name='data']").val(JSON.stringify(data));
+            } else {
+                $("input[name='verify']").prop('checked', false);
+                for (let i = 0; i < data.length; i++) {
+                    data[i].check = false;
+                }
+                $("input[name='data']").val(JSON.stringify(data));
+            }
+        });
+
+        $("input[type='checkbox']").change(function() {
+            if ($("input[name='verify']:checked").length === $("input[name='verify']").length) {
+                $('#checkAll').prop('checked', true);
+            } else {
+                $('#checkAll').prop('checked', false);
+            }
+        })
+
+        $("input[name='verify']").click(function() {
+            let nik = $(this).data('nik')
+            let findIndex = data.findIndex((el) => el.nik == nik);
+            if ($(this).is(':checked')) {
+                data[findIndex].check = true
+                $("input[name='data']").val(JSON.stringify(data));
+            } else {
+                data[findIndex].check = false
+                $("input[name='data']").val(JSON.stringify(data));
+            }
+        })
     </script>
 @endpush

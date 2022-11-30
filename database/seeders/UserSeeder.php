@@ -28,5 +28,12 @@ class UserSeeder extends Seeder
             'jabatan'=>'admin kecamatan',
             'nama'=>'Admin Desa'
         ]);
+
+        User::create([
+            'username'=>'admin kabupaten',
+            'password'=> Hash::make('admin12345'),
+            'jabatan'=>'admin kabupaten',
+            'nama'=>'Admin Kabupaten'
+        ]);
     }
 }

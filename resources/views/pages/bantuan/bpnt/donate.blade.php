@@ -3,15 +3,12 @@
 @section('content')
     <div class="card radius-10">
         <div class="card-body">
-            <form action="{{ isset($id) ? route('bnpt.update', $bnpt->id) : route('bnpt.store') }}" method="post">
+            <form action="{{ isset($id) ? route('bpnt.verify', $bpnt->id) : route('bpnt.store') }}" method="post">
                 @csrf
-                @if (isset($id))
-                    @method('put')
-                @endif
                 <div class="form-group">
                     <label for="no_surat">Nomor Surat</label>
                     <input type="text" name="no_surat" class="form-control @error('no_surat') is-invalid @enderror"
-                        placeholder="no_surat" value="{{ isset($id) ? $bnpt->no_surat : old('no_surat') }}"
+                        placeholder="no_surat" value="{{ isset($id) ? $bpnt->no_surat : old('no_surat') }}"
                         {{ isset($id) ? 'disabled' : '' }}>
                     @error('no_surat')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -21,19 +18,17 @@
                     <label for="tgl_pengajuan">Tanggal Pengajuan</label>
                     <input type="date" name="tgl_pengajuan"
                         class="form-control @error('tgl_pengajuan') is-invalid @enderror" placeholder="tgl_pengajuan"
-                        value="{{ isset($id) ? $bnpt->tgl_pengajuan : old('tgl_pengajuan') }}">
+                        value="{{ isset($id) ? $bpnt->tgl_pengajuan : old('tgl_pengajuan') }}" disabled>
                     @error('tgl_pengajuan')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
                 <input type="hidden" name="data" value="{{ isset($id) ? json_encode($data) : old('data') }}">
-
-                <button type="button" class="btn btn-dark btn-sm mt-3" data-bs-toggle="modal"
-                    data-bs-target="#exampleVerticallycenteredModal">Tambah Penduduk</button>
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped mt-3">
                         <thead>
                             <tr>
+                                <th><input type="checkbox" id="checkAll"></th>
                                 <th>NIK</th>
                                 <th>Nama</th>
                                 <th>TTL</th>
@@ -41,16 +36,15 @@
                                 <th>Agama</th>
                                 <th>Status</th>
                                 <th>Kewarganegaraan</th>
-                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody id="tbody">
                         </tbody>
                     </table>
                 </div>
-                <div class="form-group mt-5">
+                {{-- <div class="form-group mt-5">
                     <button type="submit" class="btn btn-primary btn-sm">{{ isset($id) ? 'Update' : 'Tambah' }}</button>
-                </div>
+                </div> --}}
             </form>
         </div>
     </div>
@@ -94,86 +88,27 @@
 
 @push('customjs')
     <script>
-        let data = [];
-        $("select[name='penduduk']").on('change', function() {
-            let val = $(this).val()
-            let nik = $(this).find(':selected').data('nik');
-            let id = $(this).find(':selected').data('id');
-            let nama = $(this).find(':selected').data('nama');
-            let tempat_lahir = $(this).find(':selected').data('tempat_lahir');
-            let tgl_lahir = $(this).find(':selected').data('tgl_lahir');
-            let jk = $(this).find(':selected').data('jk');
-            let agama = $(this).find(':selected').data('agama');
-            let status_kawin = $(this).find(':selected').data('status_kawin');
-            let kewarganegaraan = $(this).find(':selected').data('kewarganegaraan');
-
-            let check = data.find((el) => el.nik == nik)
-            if (check) {
-                $("#exampleVerticallycenteredModal").modal('hide')
-                setTimeout(() => {
-                    alert(nama + ' sudah ada di daftar list')
-                }, 1000);
+        const checkAll = (dataCheck) => {
+            let totalData = dataCheck.filter((el) => el.status !== 'Ditolak').length
+            let totalDataChecked = dataCheck.filter((el) => el.status !== 'Ditolak').filter((el) => el
+                .check ===
+                true).length
+            console.log(totalData, totalDataChecked)
+            if (totalData === totalDataChecked) {
+                $('#checkAll').prop('checked', true).prop('disabled', true);
+                // renderData(dataCheck)
             } else {
-                data.push({
-                    id,
-                    nik,
-                    nama,
-                    tempat_lahir,
-                    tgl_lahir,
-                    jk,
-                    agama,
-                    status_kawin,
-                    kewarganegaraan
-                })
-                let tbody = ''
-                data.map((el) => {
-                    tbody += `
-                    <tr>
-                                    <td>${el.nik}</td>
-                                    <td>${el.nama}</td>
-                                    <td>${el.tempat_lahir + ' '+el.tgl_lahir}</td>
-                                    <td>${el.jk}</td>
-                                    <td>${el.agama}</td>
-                                    <td>${el.status_kawin}</td>
-                                    <td>${el.kewarganegaraan}</td>
-                                    <td>
-                                        <a class="text-danger remove" href="#" data-nik="${el.nik}">hapus<a/a>
-                                    </td>
-                                </tr>
-                    `;
-                })
-
-                $("#tbody").html(tbody)
-                $("input[name='data']").val(JSON.stringify(data));
-                $("#exampleVerticallycenteredModal").modal('hide')
+                $('#checkAll').prop('checked', false).prop('disabled', false);
+                // renderData(dataCheck)
             }
-        })
+        }
 
-        $(document).on('click', '.remove', function() {
-            let nik = $(this).data('nik')
-            const indexOfObject = data.findIndex(object => {
-                return object.nik == nik;
-            });
-
-            data.splice(indexOfObject, 1)
-
-            let parent = $(this).parent().parent()
-            $(parent).remove()
-            $("input[name='data']").val(JSON.stringify(data));
-        })
-    </script>
-@endpush
-
-@if (isset($id))
-    @push('customjs')
-        <script>
-            let dataPenduduk = $("input[name='data']").val()
-            dataPenduduk = JSON.parse(dataPenduduk)
-            // data = dataPenduduk
-            dataPenduduk.map((el, index) => {
-                data.push(el)
+        const renderData = (dataRender) => {
+            dataRender.map((el, index) => {
+                let checked = el.status === 'Sudah Dibagikan' ? 'checked disabled' : ''
                 tbody += `
                     <tr>
+                                    <td>${el.status === 'Ditolak' ? '<i style="font-size: 19px;color:red" class="bx bx-window-close"></i>' : el.status==='Sudah Disalurkan' ? '<i style="font-size: 19px;color:green" class="bx bx-check-circle"></i>' : '<input type="checkbox" class="verify" name="verify" data-nik="'+el.id+'">'}</td>
                                     <td>${el.nik}</td>
                                     <td>${el.nama}</td>
                                     <td>${el.tempat_lahir + ' '+el.tgl_lahir}</td>
@@ -181,14 +116,65 @@
                                     <td>${el.agama}</td>
                                     <td>${el.status_kawin}</td>
                                     <td>${el.kewarganegaraan}</td>
-                                    <td>
-                                        <a class="text-danger remove" href="#" data-nik="${el.nik}">hapus<a/a>
-                                    </td>
                                 </tr>
                     `;
             })
 
             $("#tbody").html(tbody)
-        </script>
-    @endpush
-@endif
+        }
+        $(document).ready(function() {
+            let data = [];
+            let dataPenduduk = $("input[name='data']").val()
+            dataPenduduk = JSON.parse(dataPenduduk)
+            dataPenduduk.map((el) => data.push(el))
+            // data = dataPenduduk
+            renderData(dataPenduduk)
+
+            // chek all
+            $("#checkAll").change(function() {
+                let nik = data.filter((item) => item.status === 'Diterima').map((el) => el.id)
+                $.ajax({
+                    url: '{{ route('bpnt.bagikan.aksi') }}',
+                    method: 'get',
+                    data: {
+                        data: nik,
+                        id: '{{ $id }}'
+                    },
+                    success: function(res) {
+                        console.log(res)
+                        data.filter((el) => el.status !== 'Ditolak').map((item, index) => {
+                            let findIndex = data.findIndex((el) => el.nik == item.nik)
+                            data[findIndex].status = 'Sudah Disalurkan'
+                            data[findIndex].check = true
+                        })
+                        window.location.reload();
+                        checkAll(data)
+                        $("#checkAll").prop('checked', true);
+                    }
+                })
+            });
+
+            $("input[type='checkbox']").change(function() {
+                let nik = $(this).data('nik')
+                $.ajax({
+                    url: '{{ route('bpnt.bagikan.aksi') }}',
+                    method: 'get',
+                    data: {
+                        id_penduduk: nik,
+                        id: '{{ $id }}'
+                    },
+                    success: function(res) {
+                        console.log(res)
+                        $(this).prop('checked', true);
+                        checkAll(data)
+                        window.location.reload();
+                        let findIndex = data.findIndex((el) => el.id === nik)
+                        data[findIndex].status = 'Sudah Disalurkan'
+                        data[findIndex].check = true
+                    }
+                })
+            })
+            checkAll(data)
+        })
+    </script>
+@endpush
