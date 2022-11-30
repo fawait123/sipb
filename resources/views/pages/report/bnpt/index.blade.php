@@ -2,5 +2,5 @@
 
 
 @section('content')
-    <h1>Halaman Laporan Bnpt</h1>
+    <livewire:report.bnpt />
 @endsection

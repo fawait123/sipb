@@ -23,9 +23,13 @@ class Pkh extends Component
         $query = BantuanModel::query();
         $query = $query->with(['jenis','userInput']);
         $query = $query->whereHas('jenis',function($qr){
-            $qr->where('nama_bantuan','like','%pkh%');
+            $qr->where('nama_bantuan','PKH');
         });
-        $query = $query->where('no_surat','like','%'.$this->search.'%');
+        if($this->search != ''){
+            $query = $query->where('no_surat','like','%'.$this->search.'%')->whereHas('jenis',function($qr){
+                $qr->where('nama_bantuan','PKH');
+            });
+        }
         $query = $query->paginate(10);
         return view('livewire.bantuan.pkh',compact('query'));
     }

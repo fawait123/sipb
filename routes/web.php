@@ -12,6 +12,7 @@ use App\Http\Controllers\KeluargaController;
 use App\Http\Controllers\BantuanPkhController;
 use App\Http\Controllers\BantuanBnptController;
 use App\Http\Controllers\LaporanPkhController;
+use App\Http\Controllers\LaporanBnptController;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,4 +68,5 @@ Route::group(['prefix'=>'bantuan'],function(){
 // laporan
 Route::group(['prefix'=>'laporan'],function(){
     Route::get('pkh',[LaporanPkhController::class,'index'])->name('report.pkh');
+    Route::get('bpnt',[LaporanBnptController::class,'index'])->name('report.bpnt');
 });
