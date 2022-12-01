@@ -160,7 +160,7 @@
                 data: {
                     labels: label,
                     datasets: [{
-                        label: 'Bantuan',
+                        label: 'Bantuan ' + new Date().getFullYear(),
                         data: data,
                         borderColor: gradientStroke1,
                         backgroundColor: gradientStroke1,

@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Penduduk;
+use App\Models\JenisBantuan;
+use App\Models\Bantuan;
+use App\Models\DetailBantuan;
 
 class BantuanBnptController extends Controller
 {
