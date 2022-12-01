@@ -39,11 +39,17 @@
                                     <td>{{ $row->keterangan_bantuan }}</td>
                                     <td>{{ $row->created_at->diffForHumans() }}</td>
                                     <td>
-                                        @if (auth()->user()->jabatan == 'admin kecamatan')
+                                        @if (auth()->user()->jabatan == 'admin kabupaten' && $row->step == 1)
                                             <a href="{{ route('bpnt.form.verify', $row->id) }}" class="text-warning"><i
                                                     style="font-size: 19px" class="bx bx-donate-blood"></i></a>
                                         @endif
-                                        @if ($row->status != 'Diverifikasi')
+                                        @if (auth()->user()->jabatan == 'admin kecamatan' && ($row->step == 2 || $row->step == 0))
+                                            <a href="#" data-bs-toggle="modal"
+                                                data-bs-target="#exampleModal{{ $loop->iteration }}"
+                                                class="text-warning"><i style="font-size: 19px"
+                                                    class="bx bx-badge-check"></i></a>
+                                        @endif
+                                        @if ($row->status == 'Diajukan' && auth()->user()->jabatan == 'admin desa')
                                             <a href="{{ route('bpnt.edit', $row->id) }}" class="text-primary"><i
                                                     style="font-size: 19px" class="bx bx-message-square-edit"></i></a>
                                             <a href="{{ route('bpnt.destroy', $row->id) }}"
@@ -56,14 +62,39 @@
                                                 @method('delete')
                                             </form>
                                         @endif
-                                        @if (auth()->user()->jabatan == 'admin desa' && $row->status == 'Diverifikasi')
+                                        @if (auth()->user()->jabatan == 'admin desa' && $row->step == 3)
                                             <a href="{{ route('bpnt.bagikan', $row->id) }}" class="text-dark"><i
-                                                    style="font-size: 19px" class="bx bx-donate-heart"></i></a>
+                                                    style="font-size: 19px" class="bx bx-donate-blood"></i></a>
                                         @endif
                                         <a href="{{ route('bpnt.show', $row->id) }}" class="text-success"><i
                                                 style="font-size: 19px" class="bx bx-info-square"></i></a>
                                     </td>
                                 </tr>
+
+                                <div class="modal fade" id="exampleModal{{ $loop->iteration }}" tabindex="-1"
+                                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <form action="{{ route('bpnt.konfirmasi', $row->id) }}" method="post">
+                                            @csrf
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Verifikasi Bantuan
+                                                    </h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Apakah anda yakin ingin konfirmasi bantuan ?</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Tidak</button>
+                                                    <button type="submit" class="btn btn-primary">Ya</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
                             @endforeach
                         @else
                             <tr>

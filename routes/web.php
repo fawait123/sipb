@@ -58,7 +58,7 @@ Route::group(['prefix'=>'bantuan','middleware'=>'auth'],function(){
     Route::get('/pkh/verify/{id}',[BantuanPkhController::class,'formVerify'])->name('pkh.form.verify');
     Route::resource('pkh',BantuanPkhController::class);
     // bnpt
-    Route::post('/bpnt/konfirmasi/{id}',[BantuanPkhController::class,'konfirmasi'])->name('bpnt.konfirmasi');
+    Route::post('/bpnt/konfirmasi/{id}',[BantuanBnptController::class,'konfirmasi'])->name('bpnt.konfirmasi');
     Route::get('/bpnt/bagikan/aksi',[BantuanBnptController::class,'bagikanBantuanAction'])->name('bpnt.bagikan.aksi');
     Route::get('/bpnt/bagikan/{id}',[BantuanBnptController::class,'bagikanBantuan'])->name('bpnt.bagikan');
     Route::post('/bpnt/verify/{id}',[BantuanBnptController::class,'verifyBantuan'])->name('bpnt.verify');
