@@ -9,7 +9,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="{{ asset('assets') }}/images/favicon-32x32.png" type="image/png" />
+    <link rel="icon" href="{{ asset('assets/logo_sipb.png') }}" type="image/png" />
     <!--plugins-->
     <link href="{{ asset('assets') }}/plugins/select2/css/select2.min.css" rel="stylesheet" />
     <link href="{{ asset('assets') }}/plugins/select2/css/select2-bootstrap4.css" rel="stylesheet" />
@@ -50,7 +50,7 @@
             margin: 0;
         }
     </style>
-    <title>Sistem Penerimaan Bantuan - Bootstrap 5 Admin Dashboard Template</title>
+    <title>Kecamatan Maospati - Sistem Penerimaan Bantuan</title>
 </head>
 
 <body>
@@ -60,10 +60,10 @@
         <div class="sidebar-wrapper" data-simplebar="true">
             <div class="sidebar-header">
                 <div>
-                    <img src="{{ asset('assets') }}/images/logo-icon.png" class="logo-icon" alt="logo icon">
+                    <img src="{{ asset('assets/logo_sipb.png') }}" class="logo-icon" alt="logo icon">
                 </div>
                 <div>
-                    <h4 class="logo-text">Rocker</h4>
+                    <h4 class="logo-text">Maospati</h4>
                 </div>
                 <div class="toggle-icon ms-auto"><i class='bx bx-arrow-to-left'></i>
                 </div>

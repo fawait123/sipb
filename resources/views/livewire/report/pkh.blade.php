@@ -21,6 +21,7 @@
                     <thead class="table-light">
                         <tr>
                             <th>No</th>
+                            <th>Jenis</th>
                             <th>No Surat</th>
                             <th>Tanggal Pengajuan</th>
                             <th>Tanggal Penerimaan</th>
@@ -33,6 +34,7 @@
                             @foreach ($query as $row)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $row->bantuan->jenis->nama_bantuan }}</td>
                                     <td>{{ $row->bantuan->no_surat }}</td>
                                     <td>{{ $row->bantuan->tgl_pengajuan }}</td>
                                     <td>{{ $row->bantuan->tgl_penerimaan }}</td>

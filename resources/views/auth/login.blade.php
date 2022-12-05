@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--favicon-->
-    <link rel="icon" href="{{ asset('assets') }}/images/favicon-32x32.png" type="image/png" />
+    <link rel="icon" href="{{ asset('assets/logo_sipb.png') }}" type="image/png" />
     <!--plugins-->
     <link rel="stylesheet" href="{{ asset('assets') }}/plugins/notifications/css/lobibox.min.css" />
     <link href="{{ asset('assets') }}/plugins/simplebar/css/simplebar.css" rel="stylesheet" />
@@ -26,7 +26,7 @@
     <link rel="stylesheet" href="{{ asset('assets') }}/css/dark-theme.css" />
     <link rel="stylesheet" href="{{ asset('assets') }}/css/semi-dark.css" />
     <link rel="stylesheet" href="{{ asset('assets') }}/css/header-colors.css" />
-    <title>Rocker - Bootstrap 5 Admin Dashboard Template</title>
+    <title>Kecamatan Maospati - Login</title>
 </head>
 
 <body class="bg-login">
@@ -37,7 +37,7 @@
                 <div class="row row-cols-1 row-cols-lg-2 row-cols-xl-3">
                     <div class="col mx-auto">
                         <div class="mb-4 text-center">
-                            <img src="{{ asset('assets') }}/images/logo-img.png" width="180" alt="" />
+                            <img src="{{ asset('assets/logo_sipb.png') }}" width="120" alt="" />
                         </div>
                         <div class="card">
                             <div class="card-body">
