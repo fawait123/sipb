@@ -51,10 +51,10 @@
                                             data-created_at="{{ $row->created_at->diffForHumans() }}"
                                             data-agama="{{ $row->agama ? $row->agama->agama : null }}"
                                             data-desa="{{ $row->desa->desa }}"
-                                            data-kecamatan="{{ $row->desa->kecamatan->kecamatan }}"
-                                            data-kabupaten="{{ $row->desa->kecamatan->kabupaten->kabupaten }}"
-                                            data-pekerjaan="{{ $row->pekerjaan ? $row->pekerjaan->pekerjaan : null }}"
-                                            data-keluarga="{{ $row->keluarga ? $row->keluarga->keluarga : null }}"
+                                            data-kecamatan="{{ $row->desa->kecamatan->kecamatan ?? '' }}"
+                                            data-kabupaten="{{ $row->desa->kecamatan->kabupaten->kabupaten ?? '' }}"
+                                            data-pekerjaan="{{ $row->pekerjaan->pekerjaan ?? null }}"
+                                            data-keluarga="{{ $row->keluarga->keluarga ?? null }}"
                                             data-alamat="{{ $row->alamat }}"
                                             data-tgl_lahir="{{ date('d M Y', strtotime($row->tgl_lahir)) }}"><i
                                                 style="font-size: 19px" class="bx bx-info-square"></i></a>
