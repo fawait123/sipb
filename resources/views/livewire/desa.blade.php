@@ -30,8 +30,8 @@
                             @foreach ($query as $row)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $row->kecamatan->kabupaten->kabupaten }}</td>
-                                    <td>{{ $row->kecamatan->kecamatan }}</td>
+                                    <td>{{ $row->kecamatan->kabupaten->kabupaten ?? '' }}</td>
+                                    <td>{{ $row->kecamatan->kecamatan ?? '' }}</td>
                                     <td>{{ $row->desa }}</td>
                                     <td>{{ $row->created_at->diffForHumans() }}</td>
                                     <td>
