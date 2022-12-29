@@ -6,6 +6,8 @@ use App\Models\Penduduk;
 use App\Models\Agama;
 use App\Models\Pekerjaan;
 use App\Models\Desa;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class PendudukController extends Controller
@@ -76,7 +78,16 @@ class PendudukController extends Controller
             'nama_ayah'=>$request->nama_ayah,
             'pendidikan_terakhir'=>$request->pendidikan_terakhir,
             'id_desa'=>$request->desa,
+            'penghasilan'=>$request->penghasilan
         ]);
+
+        User::create([
+            'nama'=>$request->nama,
+            'username'=>$request->nik,
+            'password'=>Hash::make(date('Ymd',strtotime($request->tgl_lahir))),
+            'jabatan'=>'penduduk',
+        ]);
+
 
         return redirect()->route('penduduk.index')->with(['message'=>'Tambah data penduduk berhasil']);
     }

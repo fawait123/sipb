@@ -10,6 +10,7 @@ use App\Http\Controllers\DesaController;
 use App\Http\Controllers\PendudukController;
 use App\Http\Controllers\KeluargaController;
 use App\Http\Controllers\BantuanPkhController;
+use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\BantuanBnptController;
 use App\Http\Controllers\LaporanPkhController;
 use App\Http\Controllers\LaporanBnptController;
@@ -64,6 +65,13 @@ Route::group(['prefix'=>'bantuan','middleware'=>'auth'],function(){
     Route::post('/bpnt/verify/{id}',[BantuanBnptController::class,'verifyBantuan'])->name('bpnt.verify');
     Route::get('/bpnt/verify/{id}',[BantuanBnptController::class,'formVerify'])->name('bpnt.form.verify');
     Route::resource('bpnt',BantuanBnptController::class);
+
+    // pendaftaran bantuan
+    Route::get('/pendaftaran',[PendaftaranController::class,'pendaftaranbnpt'])->name('bnpt.pendaftaran');
+    Route::post('/pendaftaran',[PendaftaranController::class,'store'])->name('pendaftaran.store');
+    Route::group(['prefix'=>'admin'],function(){
+        Route::get('/pengajuan',[PendaftaranController::class,'index'])->name('pendaftaran.index');
+    });
 });
 
 // laporan

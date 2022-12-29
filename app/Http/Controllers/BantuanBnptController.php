@@ -7,6 +7,7 @@ use App\Models\Penduduk;
 use App\Models\JenisBantuan;
 use App\Models\Bantuan;
 use App\Models\DetailBantuan;
+use App\Models\Pendaftaran;
 
 class BantuanBnptController extends Controller
 {
@@ -22,8 +23,12 @@ class BantuanBnptController extends Controller
      */
     public function create()
     {
+        $pendaftaran = Pendaftaran::with(['jenis','penduduk'])->where('status','terdaftar')->whereHas('jenis',function($qr){
+            $qr->where('nama_bantuan','BPNT');
+        })->get();
         return view('pages.bantuan.bpnt.form',[
-            'penduduk' =>Penduduk::with('agama')->get()
+            'penduduk' =>Penduduk::with('agama')->get(),
+            'pendaftaran'=>$pendaftaran
         ]);
     }
 
@@ -35,6 +40,10 @@ class BantuanBnptController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'no_surat'=>'required',
+            'tgl_pengajuan'=>'required',
+        ]);
         $jenis = JenisBantuan::where('nama_bantuan','like','%bpnt%')->first();
 
         $bantuan = Bantuan::create([
@@ -45,12 +54,19 @@ class BantuanBnptController extends Controller
             'id_user_input'=>auth()->user()->id,
         ]);
 
-        foreach(json_decode($request->data) as $item){
+        $pendaftaran = Pendaftaran::with(['jenis','penduduk'])->where('status','terdaftar')->whereHas('jenis',function($qr){
+            $qr->where('nama_bantuan','BPNT');
+        })->get();
+
+        foreach($pendaftaran as $item){
             DetailBantuan::create([
-                'id_penduduk'=>$item->id,
+                'id_penduduk'=>$item->id_penduduk,
                 'id_bantuan'=>$bantuan->id,
                 'status_pengajuan'=>'Sedang diajukan',
                 'id_user_verifikator'=>null
+            ]);
+            Pendaftaran::where('id',$item->id)->update([
+                'status'=>'Sedang diajukan',
             ]);
         }
 
@@ -107,20 +123,20 @@ class BantuanBnptController extends Controller
         $data = [];
         foreach($bantuans->detail as $bantuan){
             array_push($data,[
-                'id'=>$bantuan->penduduk->id,
-                'nik'=>$bantuan->penduduk->nik,
-                'nama'=>$bantuan->penduduk->nama,
-                'tempat_lahir'=>$bantuan->penduduk->tempat_lahir,
-                'tgl_lahir'=>$bantuan->penduduk->tgl_lahir,
-                'jk'=>$bantuan->penduduk->jk,
-                'agama'=>$bantuan->penduduk->agama->agama,
-                'status_kawin'=>$bantuan->penduduk->status_kawin,
-                'kewarganegaraan'=>$bantuan->penduduk->kewarganegaraan,
+                'id'=>$bantuan->penduduk->id ?? '',
+                'nik'=>$bantuan->penduduk->nik ?? '',
+                'nama'=>$bantuan->penduduk->nama ?? '',
+                'tempat_lahir'=>$bantuan->penduduk->tempat_lahir ?? '',
+                'tgl_lahir'=>$bantuan->penduduk->tgl_lahir ?? '',
+                'jk'=>$bantuan->penduduk->jk ?? '',
+                'agama'=>$bantuan->penduduk->agama->agama ?? '',
+                'status_kawin'=>$bantuan->penduduk->status_kawin ?? '',
+                'kewarganegaraan'=>$bantuan->penduduk->kewarganegaraan ?? '',
             ]);
         }
         // dd($data);
         if($bantuans){
-            return view('pages.bantuan.bpnt.form',[
+            return view('pages.bantuan.bpnt.edit',[
                 'penduduk' =>Penduduk::with('agama')->get(),
                 'bpnt'=>$bantuans,
                 'data'=>$data,
@@ -143,6 +159,7 @@ class BantuanBnptController extends Controller
         Bantuan::where('id',$id)->update([
             'tgl_pengajuan'=>$request->tgl_pengajuan,
             'id_user_input'=>auth()->user()->id,
+            'no_surat'=>$request->no_surat
         ]);
         DetailBantuan::where('id_bantuan',$id)->delete();
         foreach(json_decode($request->data) as $item){
@@ -212,6 +229,9 @@ class BantuanBnptController extends Controller
 
         foreach(json_decode($request->data) as $bantuan){
             $verif = $bantuan->check == true ? 'Diterima' : 'Ditolak';
+            Pendaftaran::where('status','Diverifikasi')->where('id_penduduk',$bantuan->id)->update([
+                'status'=> $verif
+            ]);
             DetailBantuan::where('id_penduduk',$bantuan->id)->update([
                 'status_pengajuan'=> $verif,
                 'id_user_verifikator'=>auth()->user()->id
@@ -257,11 +277,17 @@ class BantuanBnptController extends Controller
     public function bagikanBantuanAction(Request $request)
     {
         if($request->filled("data")){
+
             Bantuan::where('id',$request->id)->update([
                 'tgl_penerimaan'=>date('Y-m-d')
             ]);
+
             DetailBantuan::whereIn('id_penduduk',$request->data)->update([
                 'status_pengajuan'=> 'Sudah Disalurkan'
+            ]);
+
+            Pendaftaran::where('status','Dikirimkan')->update([
+                'status'=>'Sudah Disalurkan'
             ]);
 
             return 'success';
@@ -274,6 +300,9 @@ class BantuanBnptController extends Controller
             DetailBantuan::where('id_penduduk',$request->id_penduduk)->update([
                 'status_pengajuan'=> 'Sudah Disalurkan'
             ]);
+            Pendaftaran::where('status','Dikirimkan')->update([
+                'status'=>'Sudah Disalurkan'
+            ]);
             return 'success';
         }
 
@@ -282,14 +311,30 @@ class BantuanBnptController extends Controller
 
     public function konfirmasi($id)
     {
-        $bantuan = Bantuan::where('id',$id)->first();
+        $bantuan = Bantuan::with('detail')->where('id',$id)->first();
         if($bantuan){
             Bantuan::where('id',$id)->update([
                 'status'=> 'Diverifikasi',
                 'step'=>$bantuan->step + 1
             ]);
+            $status = $bantuan->step == 2 ? 'Dikirimkan' : 'Diverifikasi';
+            if($bantuan->step == 2){
+                Pendaftaran::where('status','Diterima')->update([
+                    'status'=>$status,
+                ]);
+            }else{
+                Pendaftaran::where('status','Sedang diajukan')->update([
+                    'status'=>$status,
+                ]);
+            }
+
             return redirect()->route('bpnt.index')->with(['message'=>'Bantuan berhasil dikonfirmasi']);
         }
         return redirect()->route('bpnt.index');
+    }
+
+    public function pengajuan()
+    {
+        return view('pages.bantuan.bpnt.pengajuan');
     }
 }

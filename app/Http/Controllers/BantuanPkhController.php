@@ -7,6 +7,7 @@ use App\Models\Penduduk;
 use App\Models\JenisBantuan;
 use App\Models\Bantuan;
 use App\Models\DetailBantuan;
+use App\Models\Pendaftaran;
 
 class BantuanPkhController extends Controller
 {
@@ -27,8 +28,12 @@ class BantuanPkhController extends Controller
      */
     public function create()
     {
+        $pendaftaran = Pendaftaran::with(['jenis','penduduk'])->where('status','terdaftar')->whereHas('jenis',function($qr){
+            $qr->where('nama_bantuan','PKH');
+        })->get();
         return view('pages.bantuan.pkh.form',[
-            'penduduk' =>Penduduk::with('agama')->get()
+            'penduduk' =>Penduduk::with('agama')->get(),
+            'pendaftaran'=>$pendaftaran
         ]);
     }
 
@@ -40,6 +45,10 @@ class BantuanPkhController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'no_surat'=>'required',
+            'tgl_pengajuan'=>'required',
+        ]);
         $jenis = JenisBantuan::where('nama_bantuan','like','%pkh%')->first();
 
         $bantuan = Bantuan::create([
@@ -50,12 +59,19 @@ class BantuanPkhController extends Controller
             'id_user_input'=>auth()->user()->id,
         ]);
 
-        foreach(json_decode($request->data) as $item){
+        $pendaftaran = Pendaftaran::with(['jenis','penduduk'])->where('status','terdaftar')->whereHas('jenis',function($qr){
+            $qr->where('nama_bantuan','PKH');
+        })->get();
+
+        foreach($pendaftaran as $item){
             DetailBantuan::create([
-                'id_penduduk'=>$item->id,
+                'id_penduduk'=>$item->id_penduduk,
                 'id_bantuan'=>$bantuan->id,
                 'status_pengajuan'=>'Sedang diajukan',
                 'id_user_verifikator'=>null
+            ]);
+            Pendaftaran::where('id',$item->id)->update([
+                'status'=>'Sedang diajukan',
             ]);
         }
 
@@ -112,20 +128,20 @@ class BantuanPkhController extends Controller
         $data = [];
         foreach($bantuans->detail as $bantuan){
             array_push($data,[
-                'id'=>$bantuan->penduduk->id,
-                'nik'=>$bantuan->penduduk->nik,
-                'nama'=>$bantuan->penduduk->nama,
-                'tempat_lahir'=>$bantuan->penduduk->tempat_lahir,
-                'tgl_lahir'=>$bantuan->penduduk->tgl_lahir,
-                'jk'=>$bantuan->penduduk->jk,
-                'agama'=>$bantuan->penduduk->agama->agama,
-                'status_kawin'=>$bantuan->penduduk->status_kawin,
-                'kewarganegaraan'=>$bantuan->penduduk->kewarganegaraan,
+                'id'=>$bantuan->penduduk->id ?? '',
+                'nik'=>$bantuan->penduduk->nik ?? '',
+                'nama'=>$bantuan->penduduk->nama ?? '',
+                'tempat_lahir'=>$bantuan->penduduk->tempat_lahir ?? '',
+                'tgl_lahir'=>$bantuan->penduduk->tgl_lahir ?? '',
+                'jk'=>$bantuan->penduduk->jk ?? '',
+                'agama'=>$bantuan->penduduk->agama->agama ?? '',
+                'status_kawin'=>$bantuan->penduduk->status_kawin ?? '',
+                'kewarganegaraan'=>$bantuan->penduduk->kewarganegaraan ?? '',
             ]);
         }
         // dd($data);
         if($bantuans){
-            return view('pages.bantuan.pkh.form',[
+            return view('pages.bantuan.pkh.edit',[
                 'penduduk' =>Penduduk::with('agama')->get(),
                 'pkh'=>$bantuans,
                 'data'=>$data,
@@ -148,6 +164,7 @@ class BantuanPkhController extends Controller
         Bantuan::where('id',$id)->update([
             'tgl_pengajuan'=>$request->tgl_pengajuan,
             'id_user_input'=>auth()->user()->id,
+            'no_surat'=>$request->no_surat
         ]);
         DetailBantuan::where('id_bantuan',$id)->delete();
         foreach(json_decode($request->data) as $item){
@@ -217,6 +234,9 @@ class BantuanPkhController extends Controller
 
         foreach(json_decode($request->data) as $bantuan){
             $verif = $bantuan->check == true ? 'Diterima' : 'Ditolak';
+            Pendaftaran::where('status','Diverifikasi')->where('id_penduduk',$bantuan->id)->update([
+                'status'=> $verif
+            ]);
             DetailBantuan::where('id_penduduk',$bantuan->id)->update([
                 'status_pengajuan'=> $verif,
                 'id_user_verifikator'=>auth()->user()->id
@@ -268,7 +288,9 @@ class BantuanPkhController extends Controller
             DetailBantuan::whereIn('id_penduduk',$request->data)->update([
                 'status_pengajuan'=> 'Sudah Disalurkan'
             ]);
-
+            Pendaftaran::where('status','Dikirimkan')->update([
+                'status'=>'Sudah Disalurkan'
+            ]);
             return 'success';
         }
 
@@ -278,6 +300,9 @@ class BantuanPkhController extends Controller
             ]);
             DetailBantuan::where('id_penduduk',$request->id_penduduk)->update([
                 'status_pengajuan'=> 'Sudah Disalurkan'
+            ]);
+            Pendaftaran::where('status','Dikirimkan')->update([
+                'status'=>'Sudah Disalurkan'
             ]);
             return 'success';
         }
@@ -293,6 +318,16 @@ class BantuanPkhController extends Controller
                 'status'=> 'Diverifikasi',
                 'step'=>$bantuan->step + 1
             ]);
+            $status = $bantuan->step == 2 ? 'Dikirimkan' : 'Diverifikasi';
+            if($bantuan->step == 2){
+                Pendaftaran::where('status','Diterima')->update([
+                    'status'=>$status,
+                ]);
+            }else{
+                Pendaftaran::where('status','Sedang diajukan')->update([
+                    'status'=>$status,
+                ]);
+            }
             return redirect()->route('pkh.index')->with(['message'=>'Bantuan berhasil dikonfirmasi']);
         }
         return redirect()->route('pkh.index');

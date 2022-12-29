@@ -3,7 +3,12 @@
         <div class="card-body">
             <div class="d-flex align-items-center">
                 <div>
-                    <a href="{{ route('bpnt.create') }}" class="btn btn-primary btn-sm">Tambah</a>
+                    @if (auth()->user()->jabatan == 'penduduk')
+                        <a href="{{ route('bpnt.create') }}" class="btn btn-primary btn-sm">Pengajuan</a>
+                    @endif
+                    @if (auth()->user()->jabatan != 'penduduk')
+                        <a href="{{ route('bpnt.create') }}" class="btn btn-primary btn-sm">Tambah</a>
+                    @endif
                 </div>
                 <div class="ms-auto">
                     <input type="text" class="form-control" wire:model="search" placeholder="Search...">
