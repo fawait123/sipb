@@ -40,6 +40,10 @@ class BantuanBnptController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'no_surat'=>'required',
+            'tgl_pengajuan'=>'required',
+        ]);
         $jenis = JenisBantuan::where('nama_bantuan','like','%bpnt%')->first();
 
         $bantuan = Bantuan::create([
@@ -314,9 +318,15 @@ class BantuanBnptController extends Controller
                 'step'=>$bantuan->step + 1
             ]);
             $status = $bantuan->step == 2 ? 'Dikirimkan' : 'Diverifikasi';
-            Pendaftaran::where('status','Diterima')->update([
-                'status'=>$status,
-            ]);
+            if($bantuan->step == 2){
+                Pendaftaran::where('status','Diterima')->update([
+                    'status'=>$status,
+                ]);
+            }else{
+                Pendaftaran::where('status','Sedang diajukan')->update([
+                    'status'=>$status,
+                ]);
+            }
 
             return redirect()->route('bpnt.index')->with(['message'=>'Bantuan berhasil dikonfirmasi']);
         }
