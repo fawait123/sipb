@@ -14,7 +14,7 @@ class PendaftaranController extends Controller
     public function pendaftaranbnpt()
     {
         $penduduk = Penduduk::where('nik',auth()->user()->username)->first();
-        $pendaftaran = Pendaftaran::where('id_penduduk',$penduduk->id)->first();
+        $pendaftaran = Pendaftaran::with('penduduk')->where('id_penduduk',$penduduk->id)->first();
         $umur = $this->getRange($penduduk->tgl_lahir,date('Y-m-d'));
         $jenis = JenisBantuan::all();
         $desa = Desa::all();
@@ -34,5 +34,10 @@ class PendaftaranController extends Controller
 
         Pendaftaran::create(array_merge($request->all(),['tgl_pendaftaran'=>date('Y-m-d'),'status'=>'terdaftar']));
         return redirect()->route('bnpt.pendaftaran')->with(['message'=>'Pendaftaran bantuan berhasil']);
+    }
+
+    public function index()
+    {
+        return view('pages.pendaftaran.index');
     }
 }

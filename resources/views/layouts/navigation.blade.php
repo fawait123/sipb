@@ -61,6 +61,13 @@
     @endif
     @if (auth()->user()->jabatan != 'penduduk')
         <li class="menu-label">Pengajuan Bantuan</li>
+        {{-- <li>
+            <a href="{{ route('pendaftaran.index') }}">
+                <div class="parent-icon"><i class='bx bx-money'></i>
+                </div>
+                <div class="menu-title">Pengajuan</div>
+            </a>
+        </li> --}}
         <li>
             <a href="{{ route('bpnt.index') }}">
                 <div class="parent-icon"><i class='bx bx-money'></i>

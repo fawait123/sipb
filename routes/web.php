@@ -69,6 +69,9 @@ Route::group(['prefix'=>'bantuan','middleware'=>'auth'],function(){
     // pendaftaran bantuan
     Route::get('/pendaftaran',[PendaftaranController::class,'pendaftaranbnpt'])->name('bnpt.pendaftaran');
     Route::post('/pendaftaran',[PendaftaranController::class,'store'])->name('pendaftaran.store');
+    Route::group(['prefix'=>'admin'],function(){
+        Route::get('/pengajuan',[PendaftaranController::class,'index'])->name('pendaftaran.index');
+    });
 });
 
 // laporan
