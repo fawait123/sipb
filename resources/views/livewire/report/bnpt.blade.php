@@ -34,12 +34,12 @@
                             @foreach ($query as $row)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $row->bantuan->jenis->nama_bantuan }}</td>
-                                    <td>{{ $row->bantuan->no_surat }}</td>
-                                    <td>{{ $row->bantuan->tgl_pengajuan }}</td>
-                                    <td>{{ $row->bantuan->tgl_penerimaan }}</td>
-                                    <td>{{ $row->status_pengajuan }}</td>
-                                    <td>{{ $row->penduduk->nama }}</td>
+                                    <td>{{ $row->bantuan->jenis->nama_bantuan ?? '' }}</td>
+                                    <td>{{ $row->bantuan->no_surat ?? '' }}</td>
+                                    <td>{{ $row->bantuan->tgl_pengajuan ?? '' }}</td>
+                                    <td>{{ $row->bantuan->tgl_penerimaan ?? '' }}</td>
+                                    <td>{{ $row->status_pengajuan ?? '' }}</td>
+                                    <td>{{ $row->penduduk->nama ?? '' }}</td>
                                 </tr>
                             @endforeach
                         @else
