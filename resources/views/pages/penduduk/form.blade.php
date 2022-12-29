@@ -88,6 +88,15 @@
                             @enderror
                         </div>
                         <div class="form-group">
+                            <label for="penghasilan">Penghasilan</label>
+                            <input type="number" name="penghasilan"
+                                class="form-control @error('penghasilan') is-invalid @enderror" placeholder="penghasilan"
+                                value="{{ isset($id) ? $penduduk->penghasilan : old('penghasilan') }}">
+                            @error('penghasilan')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
                             <label for="kewarganegaraan">Kewarganegaraan</label>
                             <select name="kewarganegaraan" id="kewarganegaraan"
                                 class="form-control @error('kewarganegaraan') is-invalid @enderror">

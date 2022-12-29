@@ -59,34 +59,46 @@
             </a>
         </li>
     @endif
-    <li class="menu-label">Pengajuan Bantuan</li>
-    <li>
-        <a href="{{ route('bpnt.index') }}">
-            <div class="parent-icon"><i class='bx bx-money'></i>
-            </div>
-            <div class="menu-title">BPNT</div>
-        </a>
-    </li>
-    <li>
-        <a href="{{ route('pkh.index') }}">
-            <div class="parent-icon"><i class='bx bx-joystick-button'></i>
-            </div>
-            <div class="menu-title">PKH</div>
-        </a>
-    </li>
-    <li class="menu-label">Laporan</li>
-    <li>
-        <a href="{{ route('report.bpnt') }}">
-            <div class="parent-icon"><i class='bx bx-task'></i>
-            </div>
-            <div class="menu-title">BPNT</div>
-        </a>
-    </li>
-    <li>
-        <a href="{{ route('report.pkh') }}">
-            <div class="parent-icon"><i class='bx bx-notification'></i>
-            </div>
-            <div class="menu-title">PKH</div>
-        </a>
-    </li>
+    @if (auth()->user()->jabatan != 'penduduk')
+        <li class="menu-label">Pengajuan Bantuan</li>
+        <li>
+            <a href="{{ route('bpnt.index') }}">
+                <div class="parent-icon"><i class='bx bx-money'></i>
+                </div>
+                <div class="menu-title">BPNT</div>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('pkh.index') }}">
+                <div class="parent-icon"><i class='bx bx-joystick-button'></i>
+                </div>
+                <div class="menu-title">PKH</div>
+            </a>
+        </li>
+        <li class="menu-label">Laporan</li>
+        <li>
+            <a href="{{ route('report.bpnt') }}">
+                <div class="parent-icon"><i class='bx bx-task'></i>
+                </div>
+                <div class="menu-title">BPNT</div>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('report.pkh') }}">
+                <div class="parent-icon"><i class='bx bx-notification'></i>
+                </div>
+                <div class="menu-title">PKH</div>
+            </a>
+        </li>
+    @endif
+    @if (auth()->user()->jabatan == 'penduduk')
+        <li class="menu-label">Pengajuan</li>
+        <li>
+            <a href="{{ route('bnpt.pendaftaran') }}">
+                <div class="parent-icon"><i class='bx bx-money'></i>
+                </div>
+                <div class="menu-title">Pendaftaran</div>
+            </a>
+        </li>
+    @endif
 </ul>

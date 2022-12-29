@@ -292,4 +292,9 @@ class BantuanBnptController extends Controller
         }
         return redirect()->route('bpnt.index');
     }
+
+    public function pengajuan()
+    {
+        return view('pages.bantuan.bpnt.pengajuan');
+    }
 }
