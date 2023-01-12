@@ -40,7 +40,9 @@
                                     <th>Jenis Kelamin</th>
                                     <th>Agama</th>
                                     <th>Status</th>
-                                    <th>Kewarganegaraan</th>
+                                    <th>KTP</th>
+                                    <th>Penghasilan</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody id="tbody">
@@ -51,7 +53,15 @@
                                         <td>{{ $item->penduduk->jk ?? '' }}</td>
                                         <td>{{ $item->penduduk->agama->agama ?? '' }}</td>
                                         <td>{{ $item->penduduk->status_kawin ?? '' }}</td>
-                                        <td>{{ $item->penduduk->kewarganegaraan ?? '' }}</td>
+                                        <td>
+                                            <a href="{{ $item->foto_ktp }}" target="blank">Foto KTP</a>
+                                        </td>
+                                        <td>
+                                            <a href="{{ $item->foto_penghasilan }}" target="blank">Foto Penghasilan</a>
+                                        </td>
+                                        <td>
+                                            <a href="{{ route('pkh.hapus', $item->id) }}" class="text-danger">Tolak</a>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>

@@ -34,7 +34,8 @@
                                 <th>Jenis Kelamin</th>
                                 <th>Agama</th>
                                 <th>Status</th>
-                                <th>Kewarganegaraan</th>
+                                <th>Foto KTP</th>
+                                <th>Foto Penghasilan</th>
                                 <th>Diverifikasi oleh</th>
                                 <th>Status</th>
                             </tr>
@@ -103,7 +104,12 @@
                                     <td>${el.jk}</td>
                                     <td>${el.agama}</td>
                                     <td>${el.status_kawin}</td>
-                                    <td>${el.kewarganegaraan}</td>
+                                    <td>
+                                        <a href="${el.foto_ktp}"  target="blank">Foto KTP</a>
+                                    </td>
+                                    <td>
+                                        <a href="${el.foto_penghasilan}" target="blank">Foto Penghasilan</a>
+                                    </td>
                                     <td>${el.verifikator}</td>
                                     <td>${el.status === 'Ditolak' ? '<span class="badge bg-danger">'+el.status+'</span>':'<span class="badge bg-primary">'+el.status+'</span>'}</td>
                                 </tr>

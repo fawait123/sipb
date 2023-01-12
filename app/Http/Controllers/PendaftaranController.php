@@ -15,7 +15,7 @@ class PendaftaranController extends Controller
     public function pendaftaranbnpt()
     {
         $penduduk = Penduduk::where('nik',auth()->user()->username)->first();
-        $pendaftaran = Administrasi::with('penduduk')->where('id_penduduk',$penduduk->id)->latest()->first();
+        $pendaftaran = Administrasi::with('penduduk')->where('id_penduduk',$penduduk->id)->where('status','!=','Sudah Disalurkan')->latest()->first();
         $umur = $this->getRange($penduduk->tgl_lahir,date('Y-m-d'));
         $jenis = JenisBantuan::all();
         $desa = Desa::all();

@@ -52,6 +52,7 @@ Route::group(['prefix'=>'masterdata','middleware'=>'auth'],function(){
 // bantuan pkh
 Route::group(['prefix'=>'bantuan','middleware'=>'auth'],function(){
     // pkh
+    Route::get('/pkh/hapus/{id}',[BantuanPkhController::class,'hapus'])->name('pkh.hapus');
     Route::post('/pkh/konfirmasi/{id}',[BantuanPkhController::class,'konfirmasi'])->name('pkh.konfirmasi');
     Route::get('/pkh/bagikan/aksi',[BantuanPkhController::class,'bagikanBantuanAction'])->name('pkh.bagikan.aksi');
     Route::get('/pkh/bagikan/{id}',[BantuanPkhController::class,'bagikanBantuan'])->name('pkh.bagikan');
