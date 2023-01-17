@@ -32,6 +32,10 @@
                         <img src="{{ $pendaftaran->foto_penghasilan }}" alt="{{ $pendaftaran->nama }}"
                             class="img-thumbnail">
                     </div>
+                    <div class="col-12">
+                        <h6>Foto Kartu Keluarga</h6>
+                        <img src="{{ $pendaftaran->foto_kk }}" alt="{{ $pendaftaran->nama }}" class="img-thumbnail">
+                    </div>
                 </div>
             </div>
         </div>
@@ -60,7 +64,7 @@
                             </div>
                         </div>
                         <div class="col-xl-9 mx-auto">
-                            <h6 class="mb-0 text-uppercase">Upload Foto KK</h6>
+                            <h6 class="mb-0 text-uppercase">Upload Foto KTP</h6>
                             <hr />
                             <div class="card">
                                 <div class="card-body">
@@ -68,6 +72,18 @@
                                         accept=".jpg, .png, image/jpeg, image/png" multiple
                                         onchange="encodeImageFileAsURL(this,'ktp')" required>
                                     <input type="hidden" name="ktp" id="ktp">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-9 mx-auto">
+                            <h6 class="mb-0 text-uppercase">Upload Foto KK</h6>
+                            <hr />
+                            <div class="card">
+                                <div class="card-body">
+                                    <input id="fancy-file-upload" type="file" name="foto_kk"
+                                        accept=".jpg, .png, image/jpeg, image/png" multiple
+                                        onchange="encodeImageFileAsURL(this,'kk')" required>
+                                    <input type="hidden" name="kk" id="kk">
                                 </div>
                             </div>
                         </div>

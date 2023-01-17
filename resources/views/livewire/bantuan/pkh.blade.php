@@ -39,9 +39,15 @@
                                     <td>{{ $row->keterangan_bantuan }}</td>
                                     <td>{{ $row->created_at->diffForHumans() }}</td>
                                     <td>
-                                        @if (auth()->user()->jabatan == 'admin kabupaten' && $row->step == 1)
+                                        @if (auth()->user()->jabatan == 'admin kabupaten 1' && $row->step == 1)
                                             <a href="{{ route('pkh.form.verify', $row->id) }}" class="text-warning"><i
                                                     style="font-size: 19px" class="bx bx-donate-blood"></i></a>
+                                        @endif
+                                        @if (auth()->user()->jabatan == 'admin kabupaten' && $row->step == 1)
+                                            <a href="#" data-bs-toggle="modal"
+                                                data-bs-target="#exampleModal{{ $loop->iteration }}"
+                                                class="text-warning"><i style="font-size: 19px"
+                                                    class="bx bx-badge-check"></i></a>
                                         @endif
                                         @if (auth()->user()->jabatan == 'admin kecamatan' && ($row->step == 2 || $row->step == 0))
                                             <a href="#" data-bs-toggle="modal"

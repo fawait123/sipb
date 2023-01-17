@@ -36,6 +36,7 @@
                                 <th>Status</th>
                                 <th>Foto KTP</th>
                                 <th>Foto Penghasilan</th>
+                                <th>Foto KK</th>
                                 <th>Diverifikasi oleh</th>
                                 <th>Status</th>
                             </tr>
@@ -109,6 +110,9 @@
                                     </td>
                                     <td>
                                         <a href="${el.foto_penghasilan}" target="blank">Foto Penghasilan</a>
+                                    </td>
+                                    <td>
+                                        <a href="${el.foto_kk}" target="blank">Foto KK</a>
                                     </td>
                                     <td>${el.verifikator}</td>
                                     <td>${el.status === 'Ditolak' ? '<span class="badge bg-danger">'+el.status+'</span>':'<span class="badge bg-primary">'+el.status+'</span>'}</td>
