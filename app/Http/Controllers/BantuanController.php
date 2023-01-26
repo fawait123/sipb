@@ -14,7 +14,7 @@ class BantuanController extends Controller
      */
     public function index()
     {
-        //
+        return view('pages.bantuan.index');
     }
 
     /**
@@ -24,7 +24,7 @@ class BantuanController extends Controller
      */
     public function create()
     {
-        //
+        return view('pages.bantuan.create');
     }
 
     /**

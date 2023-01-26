@@ -4,7 +4,12 @@
             <div class="d-flex align-items-center">
                 @if (auth()->user()->jabatan == 'admin kecamatan')
                     <div>
-                        <a href="{{ route('pkh.create') }}" class="btn btn-primary btn-sm">Tambah</a>
+                        @if ($count > 0)
+                            <a href="{{ route('bantuan.create') }}?jenis={{ $jenis }}"
+                                class="btn btn-primary btn-sm">Tambah</a>
+                        @else
+                            <span>Tidak ada bantuan</span>
+                        @endif
                     </div>
                 @endif
                 <div class="ms-auto">
@@ -40,7 +45,7 @@
                                     <td>{{ $row->userInput->nama ?? '' }}</td>
                                     <td>{{ $row->keterangan_bantuan }}</td>
                                     <td>{{ $row->created_at->diffForHumans() }}</td>
-                                    <td>
+                                    {{-- <td>
                                         @if (auth()->user()->jabatan == 'admin kabupaten 1' && $row->step == 1)
                                             <a href="{{ route('pkh.form.verify', $row->id) }}" class="text-warning"><i
                                                     style="font-size: 19px" class="bx bx-donate-blood"></i></a>
@@ -76,10 +81,10 @@
                                         @endif
                                         <a href="{{ route('pkh.show', $row->id) }}" class="text-success"><i
                                                 style="font-size: 19px" class="bx bx-info-square"></i></a>
-                                    </td>
+                                    </td> --}}
                                 </tr>
 
-                                <div class="modal fade" id="exampleModal{{ $loop->iteration }}" tabindex="-1"
+                                {{-- <div class="modal fade" id="exampleModal{{ $loop->iteration }}" tabindex="-1"
                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <form action="{{ route('pkh.konfirmasi', $row->id) }}" method="post">
@@ -102,7 +107,7 @@
                                             </div>
                                         </form>
                                     </div>
-                                </div>
+                                </div> --}}
                             @endforeach
                         @else
                             <tr>

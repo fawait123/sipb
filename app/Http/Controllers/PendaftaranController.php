@@ -34,7 +34,7 @@ class PendaftaranController extends Controller
         $umur = $this->getRange($penduduk->tgl_lahir,date('Y-m-d'));
         $syaratUmur = $syarat->umur * 365;
         if($penduduk->penghasilan <= $syarat->penghasilan && count($umur) >= $syaratUmur){
-            $status = 'Terdaftar';
+            $status = 'Lolos';
         }else{
             $status = 'Tidak Lolos';
         }
