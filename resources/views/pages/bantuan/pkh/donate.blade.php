@@ -88,93 +88,29 @@
 
 @push('customjs')
     <script>
-        const checkAll = (dataCheck) => {
-            let totalData = dataCheck.filter((el) => el.status !== 'Ditolak').length
-            let totalDataChecked = dataCheck.filter((el) => el.status !== 'Ditolak').filter((el) => el
-                .check ===
-                true).length
-            console.log(totalData, totalDataChecked)
-            if (totalData === totalDataChecked) {
-                $('#checkAll').prop('checked', true).prop('disabled', true);
-                // renderData(dataCheck)
-            } else {
-                $('#checkAll').prop('checked', false).prop('disabled', false);
-                // renderData(dataCheck)
-            }
-        }
-
-        const renderData = (dataRender) => {
-            dataRender.map((el, index) => {
-                let checked = el.status === 'Sudah Dibagikan' ? 'checked disabled' : ''
-                tbody += `
-                    <tr>
-                                    <td>${el.status === 'Ditolak' ? '<i style="font-size: 19px;color:red" class="bx bx-window-close"></i>' : el.status==='Sudah Disalurkan' ? '<i style="font-size: 19px;color:green" class="bx bx-check-circle"></i>' : '<input type="checkbox" class="verify" name="verify" data-nik="'+el.id+'">'}</td>
-                                    <td>${el.nik}</td>
-                                    <td>${el.nama}</td>
-                                    <td>${el.tempat_lahir + ' '+el.tgl_lahir}</td>
-                                    <td>${el.jk}</td>
-                                    <td>${el.agama}</td>
-                                    <td>${el.status_kawin}</td>
-                                    <td>${el.kewarganegaraan}</td>
-                                </tr>
-                    `;
-            })
-
-            $("#tbody").html(tbody)
-        }
         $(document).ready(function() {
-            let data = [];
-            let dataPenduduk = $("input[name='data']").val()
-            dataPenduduk = JSON.parse(dataPenduduk)
-            dataPenduduk.map((el) => data.push(el))
-            // data = dataPenduduk
-            renderData(dataPenduduk)
-
             // chek all
-            $("#checkAll").change(function() {
-                let nik = data.filter((item) => item.status === 'Diterima').map((el) => el.id)
-                $.ajax({
-                    url: '{{ route('pkh.bagikan.aksi') }}',
-                    method: 'get',
-                    data: {
-                        data: nik,
-                        id: '{{ $id }}'
-                    },
-                    success: function(res) {
-                        console.log(res)
-                        data.filter((el) => el.status !== 'Ditolak').map((item, index) => {
-                            let findIndex = data.findIndex((el) => el.nik == item.nik)
-                            data[findIndex].status = 'Sudah Disalurkan'
-                            data[findIndex].check = true
-                        })
-                        window.location.reload();
-                        checkAll(data)
-                        $("#checkAll").prop('checked', true);
-                    }
-                })
-            });
-
             $("input[type='checkbox']").change(function() {
                 let nik = $(this).data('nik')
-                $.ajax({
-                    url: '{{ route('pkh.bagikan.aksi') }}',
-                    method: 'get',
-                    data: {
-                        id_penduduk: nik,
-                        id: '{{ $id }}'
-                    },
-                    success: function(res) {
-                        console.log(res)
-                        $(this).prop('checked', true);
-                        checkAll(data)
-                        window.location.reload();
-                        let findIndex = data.findIndex((el) => el.id === nik)
-                        data[findIndex].status = 'Sudah Disalurkan'
-                        data[findIndex].check = true
-                    }
-                })
+                console.log(nik)
+                // $.ajax({
+                //     url: '{{ route('pkh.bagikan.aksi') }}',
+                //     method: 'get',
+                //     data: {
+                //         id_penduduk: nik,
+                //         id: '{{ $id }}'
+                //     },
+                //     success: function(res) {
+                //         console.log(res)
+                //         $(this).prop('checked', true);
+                //         checkAll(data)
+                //         window.location.reload();
+                //         let findIndex = data.findIndex((el) => el.id === nik)
+                //         data[findIndex].status = 'Sudah Disalurkan'
+                //         data[findIndex].check = true
+                //     }
+                // })
             })
-            checkAll(data)
         })
     </script>
 @endpush

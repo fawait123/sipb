@@ -19,4 +19,9 @@ class Administrasi extends Model
     {
         return $this->belongsTo(Penduduk::class,'id_penduduk');
     }
+
+    public function desa()
+    {
+        return $this->belongsTo(Desa::class,'id_desa');
+    }
 }

@@ -14,17 +14,9 @@ use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\BantuanBnptController;
 use App\Http\Controllers\LaporanPkhController;
 use App\Http\Controllers\LaporanBnptController;
+use App\Http\Controllers\AdministrasiController;
+use App\Http\Controllers\BantuanController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -51,21 +43,29 @@ Route::group(['prefix'=>'masterdata','middleware'=>'auth'],function(){
 
 // bantuan pkh
 Route::group(['prefix'=>'bantuan','middleware'=>'auth'],function(){
+    Route::get('/',[BantuanController::class,'index'])->name('bantuan.index');
+    Route::get('/create',[BantuanController::class,'create'])->name('bantuan.create');
+    Route::post('/store',[BantuanController::class,'store'])->name('bantuan.store');
+    Route::get('/show/{id}',[BantuanController::class,'show'])->name('bantuan.show');
+    Route::get('/edit/{id}',[BantuanController::class,'edit'])->name('bantuan.edit');
+    Route::put('/update/{id}',[BantuanController::class,'update'])->name('bantuan.update');
+    Route::get('/donate/{id}',[BantuanController::class,'donate'])->name('bantuan.donate');
+    Route::get('/bagikan/aksi',[BantuanController::class,'bagikanBantuanAction'])->name('bantuan.bagikan');
     // pkh
-    Route::get('/pkh/hapus/{id}',[BantuanPkhController::class,'hapus'])->name('pkh.hapus');
-    Route::post('/pkh/konfirmasi/{id}',[BantuanPkhController::class,'konfirmasi'])->name('pkh.konfirmasi');
-    Route::get('/pkh/bagikan/aksi',[BantuanPkhController::class,'bagikanBantuanAction'])->name('pkh.bagikan.aksi');
-    Route::get('/pkh/bagikan/{id}',[BantuanPkhController::class,'bagikanBantuan'])->name('pkh.bagikan');
-    Route::post('/pkh/verify/{id}',[BantuanPkhController::class,'verifyBantuan'])->name('pkh.verify');
-    Route::get('/pkh/verify/{id}',[BantuanPkhController::class,'formVerify'])->name('pkh.form.verify');
-    Route::resource('pkh',BantuanPkhController::class);
-    // bnpt
-    Route::post('/bpnt/konfirmasi/{id}',[BantuanBnptController::class,'konfirmasi'])->name('bpnt.konfirmasi');
-    Route::get('/bpnt/bagikan/aksi',[BantuanBnptController::class,'bagikanBantuanAction'])->name('bpnt.bagikan.aksi');
-    Route::get('/bpnt/bagikan/{id}',[BantuanBnptController::class,'bagikanBantuan'])->name('bpnt.bagikan');
-    Route::post('/bpnt/verify/{id}',[BantuanBnptController::class,'verifyBantuan'])->name('bpnt.verify');
-    Route::get('/bpnt/verify/{id}',[BantuanBnptController::class,'formVerify'])->name('bpnt.form.verify');
-    Route::resource('bpnt',BantuanBnptController::class);
+    // Route::get('/pkh/hapus/{id}',[BantuanPkhController::class,'hapus'])->name('pkh.hapus');
+    // Route::post('/pkh/konfirmasi/{id}',[BantuanPkhController::class,'konfirmasi'])->name('pkh.konfirmasi');
+    // Route::get('/pkh/bagikan/aksi',[BantuanPkhController::class,'bagikanBantuanAction'])->name('pkh.bagikan.aksi');
+    // Route::get('/pkh/bagikan/{id}',[BantuanPkhController::class,'bagikanBantuan'])->name('pkh.bagikan');
+    // Route::post('/pkh/verify/{id}',[BantuanPkhController::class,'verifyBantuan'])->name('pkh.verify');
+    // Route::get('/pkh/verify/{id}',[BantuanPkhController::class,'formVerify'])->name('pkh.form.verify');
+    // Route::resource('pkh',BantuanPkhController::class);
+    // // bnpt
+    // Route::post('/bpnt/konfirmasi/{id}',[BantuanBnptController::class,'konfirmasi'])->name('bpnt.konfirmasi');
+    // Route::get('/bpnt/bagikan/aksi',[BantuanBnptController::class,'bagikanBantuanAction'])->name('bpnt.bagikan.aksi');
+    // Route::get('/bpnt/bagikan/{id}',[BantuanBnptController::class,'bagikanBantuan'])->name('bpnt.bagikan');
+    // Route::post('/bpnt/verify/{id}',[BantuanBnptController::class,'verifyBantuan'])->name('bpnt.verify');
+    // Route::get('/bpnt/verify/{id}',[BantuanBnptController::class,'formVerify'])->name('bpnt.form.verify');
+    // Route::resource('bpnt',BantuanBnptController::class);
 
     // pendaftaran bantuan
     Route::get('/pendaftaran',[PendaftaranController::class,'pendaftaranbnpt'])->name('bnpt.pendaftaran');
@@ -73,6 +73,12 @@ Route::group(['prefix'=>'bantuan','middleware'=>'auth'],function(){
     Route::group(['prefix'=>'admin'],function(){
         Route::get('/pengajuan',[PendaftaranController::class,'index'])->name('pendaftaran.index');
     });
+});
+
+Route::group(['prefix'=>'administrasi','middleware'=>'auth'],function(){
+    // pkh
+    Route::get('/pkh',[AdministrasiController::class,'pkh'])->name('administrasi.pkh.index');
+    Route::get('/konfirmasi',[AdministrasiController::class,'konfirmasi'])->name('administrasi.konfirmasi');
 });
 
 // laporan

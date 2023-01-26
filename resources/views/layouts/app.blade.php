@@ -51,7 +51,7 @@
             margin: 0;
         }
     </style>
-    <title>Kecamatan Maospati - Sistem Penerimaan Bantuan</title>
+    <title>Kecamatan Maospati - Sistem Penerimaan Bantuan.</title>
 </head>
 
 <body>

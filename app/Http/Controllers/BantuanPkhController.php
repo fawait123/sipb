@@ -102,6 +102,7 @@ class BantuanPkhController extends Controller
                 'status'=>$bantuan->status_pengajuan ?? '',
                 'verifikator'=>$bantuan->verifikator->nama ?? '',
                 'foto_ktp'=>$bantuan->foto_ktp ?? '',
+                'foto_kk'=>$bantuan->foto_kk ?? '',
                 'foto_penghasilan'=>$bantuan->foto_penghasilan ?? '',
             ]);
         }
@@ -293,7 +294,7 @@ class BantuanPkhController extends Controller
             DetailBantuan::whereIn('id_penduduk',$request->data)->update([
                 'status_pengajuan'=> 'Sudah Disalurkan'
             ]);
-            Administrasi::where('status','Dikirimkan')->update([
+            Administrasi::where('status','Dikirimkan Dari Kecamatan')->update([
                 'status'=>'Sudah Disalurkan'
             ]);
             return 'success';
@@ -306,7 +307,7 @@ class BantuanPkhController extends Controller
             DetailBantuan::where('id_penduduk',$request->id_penduduk)->update([
                 'status_pengajuan'=> 'Sudah Disalurkan'
             ]);
-            Administrasi::where('status','Dikirimkan')->update([
+            Administrasi::where('status','Dikirimkan Dari Kecamatan')->where('id_penduduk',$request->id_penduduk)->update([
                 'status'=>'Sudah Disalurkan'
             ]);
             return 'success';
@@ -319,9 +320,31 @@ class BantuanPkhController extends Controller
     {
         $bantuan = Bantuan::where('id',$id)->first();
         if($bantuan){
+            $status = '';
+            if($bantuan->step == 2){
+                $status = 'Dikirimkan Dari Kecamatan';
+            }else if($bantuan->step == 1){
+                $status = 'Diverifikasi Kabupaten';
+            }else if($bantuan->step == 0){
+                $status = 'Diverifikasi Kecamatan';
+            }
             Bantuan::where('id',$id)->update([
-                'status'=> 'Diverifikasi',
+                'status'=> $status,
                 'step'=>$bantuan->step + 1
+            ]);
+            // $status = $bantuan->step == 2 ? 'Dikirimkan' : 'Diverifikasi Kecamatan';
+            // if($bantuan->step == 2){
+            //     Administrasi::where('status','Diterima')->update([
+            //         'status'=>$status,
+            //     ]);
+            // }else{
+            //     Administrasi::where('status','Sedang diajukan')->update([
+            //         'status'=>$status,
+            //     ]);
+            // }
+
+            Administrasi::where('status','Sedang diajukan')->orWhere('status','Diverifikasi Kecamatan')->orWhere('status','Diverifikasi Kabupaten')->update([
+                'status'=>$status,
             ]);
             $status = $bantuan->step == 2 ? 'Dikirimkan' : 'Diverifikasi';
             if($bantuan->step == 2){

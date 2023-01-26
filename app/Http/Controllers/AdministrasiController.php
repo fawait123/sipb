@@ -7,79 +7,27 @@ use Illuminate\Http\Request;
 
 class AdministrasiController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function pkh(Request $request)
     {
-        //
+        return view('pages.administrasi.pkh');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function konfirmasi(Request $request)
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Administrasi  $administrasi
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Administrasi $administrasi)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Administrasi  $administrasi
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Administrasi $administrasi)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Administrasi  $administrasi
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Administrasi $administrasi)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Administrasi  $administrasi
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Administrasi $administrasi)
-    {
-        //
+        if($request->jenis=='PKH'){
+            Administrasi::where('jenis_bantuan','PKH')->where('id_desa',auth()->user()->id_desa)->where('status','Lolos')->where('konfirmasi',0)->update([
+                'konfirmasi'=>true,
+                'tracking'=>'Dikonfirmasi Admin Desa'
+            ]);
+            $url = '/administrasi/pkh?jenis=PKH';
+            return redirect($url)->with(['message'=>'Konfirmasi berhasil']);
+        }else{
+            Administrasi::where('jenis_bantuan','BPNT')->where('id_desa',auth()->user()->id_desa)->where('status','Lolos')->where('konfirmasi',0)->update([
+                'konfirmasi'=>true,
+                'tracking'=>'Dikonfirmasi Admin Desa'
+            ]);
+            $url = '/administrasi/pkh?jenis=BPNT';
+            return redirect($url)->with(['message'=>'Konfirmasi berhasil']);
+        }
     }
 }

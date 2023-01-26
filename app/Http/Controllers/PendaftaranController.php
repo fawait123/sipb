@@ -29,6 +29,15 @@ class PendaftaranController extends Controller
     public function store(Request $request)
     {
         $penduduk = Penduduk::where('nik',auth()->user()->username)->first();
+        $syarat = Pendaftaran::latest()->first();
+        $status = '';
+        $umur = $this->getRange($penduduk->tgl_lahir,date('Y-m-d'));
+        $syaratUmur = $syarat->umur * 365;
+        if($penduduk->penghasilan <= $syarat->penghasilan && count($umur) >= $syaratUmur){
+            $status = 'Lolos';
+        }else{
+            $status = 'Tidak Lolos';
+        }
         Administrasi::create([
             'id_desa'=>$penduduk->id_desa,
             'nik'=>$penduduk->nik,
@@ -40,8 +49,9 @@ class PendaftaranController extends Controller
             'status_kawin'=>$penduduk->status_kawin,
             'foto_ktp'=>$request->ktp,
             'foto_penghasilan'=>$request->penghasilan,
+            'foto_kk'=>$request->kk,
             'jenis_bantuan'=>$request->jenis_bantuan,
-            'status'=>'Terdaftar'
+            'status'=>$status
         ]);
         // $request->validate([
         //     'id_desa'=>'required',

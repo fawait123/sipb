@@ -42,6 +42,8 @@
                                     <th>Status</th>
                                     <th>KTP</th>
                                     <th>Penghasilan</th>
+                                    <th>KK</th>
+                                    <th>Status</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -60,6 +62,10 @@
                                             <a href="{{ $item->foto_penghasilan }}" target="blank">Foto Penghasilan</a>
                                         </td>
                                         <td>
+                                            <a href="{{ $item->foto_kk }}" target="blank">Foto KK</a>
+                                        </td>
+                                        <td>
+                                            <span>{{ $item->status == 'Terdaftar' ? 'Lolos' : $item->status }}</span>
                                             <a href="{{ route('pkh.hapus', $item->id) }}" class="text-danger">Tolak</a>
                                         </td>
                                     </tr>

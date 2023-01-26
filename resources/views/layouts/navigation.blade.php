@@ -59,24 +59,34 @@
             </a>
         </li>
     @endif
+    @if (auth()->user()->jabatan == 'admin desa')
+        <li class="menu-label">Administrasi</li>
+        <li>
+            <a href="{{ route('administrasi.pkh.index') }}?jenis=BPNT">
+                <div class="parent-icon"><i class='bx bx-task'></i>
+                </div>
+                <div class="menu-title">BPNT</div>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('administrasi.pkh.index') }}?jenis=PKH">
+                <div class="parent-icon"><i class='bx bx-notification'></i>
+                </div>
+                <div class="menu-title">PKH</div>
+            </a>
+        </li>
+    @endif
     @if (auth()->user()->jabatan != 'penduduk')
         <li class="menu-label">Pengajuan Bantuan</li>
-        {{-- <li>
-            <a href="{{ route('pendaftaran.index') }}">
-                <div class="parent-icon"><i class='bx bx-money'></i>
-                </div>
-                <div class="menu-title">Pengajuan</div>
-            </a>
-        </li> --}}
         <li>
-            <a href="{{ route('bpnt.index') }}">
+            <a href="{{ route('bantuan.index') }}?jenis=BPNT">
                 <div class="parent-icon"><i class='bx bx-money'></i>
                 </div>
                 <div class="menu-title">BPNT</div>
             </a>
         </li>
         <li>
-            <a href="{{ route('pkh.index') }}">
+            <a href="{{ route('bantuan.index') }}?jenis=PKH">
                 <div class="parent-icon"><i class='bx bx-joystick-button'></i>
                 </div>
                 <div class="menu-title">PKH</div>
