@@ -31,6 +31,7 @@
                             <th>Diajukan oleh</th>
                             <th>Keterangan</th>
                             <th>Dibuat</th>
+                            <th>File</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -45,6 +46,23 @@
                                     <td>{{ $row->userInput->nama ?? '' }}</td>
                                     <td>{{ $row->keterangan_bantuan }}</td>
                                     <td>{{ $row->created_at->diffForHumans() }}</td>
+                                    <td>
+                                        <a href="{{ $row->file }}" target="blank">File</a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('bantuan.show', $row->id) }}" class="text-warning"><i
+                                                style="font-size: 19px" class="bx bx-info-square"></i></a>
+                                        @if (auth()->user()->jabatan == 'admin kecamatan')
+                                            <a href="{{ route('bantuan.edit', $row->id) }}" class="text-primary"><i
+                                                    style="font-size: 19px" class="bx bx-message-square-edit"></i></a>
+                                        @endif
+                                        @if (auth()->user()->jabatan == 'admin desa')
+                                            @if ($count == 0)
+                                                <a href="{{ route('bantuan.donate', $row->id) }}" class="text-dark"><i
+                                                        style="font-size: 19px" class="bx bx-donate-blood"></i></a>
+                                            @endif
+                                        @endif
+                                    </td>
                                     {{-- <td>
                                         @if (auth()->user()->jabatan == 'admin kabupaten 1' && $row->step == 1)
                                             <a href="{{ route('pkh.form.verify', $row->id) }}" class="text-warning"><i

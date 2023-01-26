@@ -29,7 +29,6 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    <input type="hidden" name="data" value="{{ isset($id) ? json_encode($data) : old('data') }}">
                     <div class="form-group">
                         <label for="no_surat">File</label>
                         <input type="file" name="file" class="form-control @error('file') is-invalid @enderror"
@@ -39,6 +38,7 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
+                    <input type="hidden" name="data" value="{{ isset($id) ? json_encode($data) : old('data') }}">
                     {{-- <button type="button" class="btn btn-dark btn-sm mt-3" data-bs-toggle="modal"
                         data-bs-target="#exampleVerticallycenteredModal">Tambah Penduduk</button> --}}
                     <div class="table-responsive">

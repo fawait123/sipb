@@ -46,6 +46,11 @@ Route::group(['prefix'=>'bantuan','middleware'=>'auth'],function(){
     Route::get('/',[BantuanController::class,'index'])->name('bantuan.index');
     Route::get('/create',[BantuanController::class,'create'])->name('bantuan.create');
     Route::post('/store',[BantuanController::class,'store'])->name('bantuan.store');
+    Route::get('/show/{id}',[BantuanController::class,'show'])->name('bantuan.show');
+    Route::get('/edit/{id}',[BantuanController::class,'edit'])->name('bantuan.edit');
+    Route::put('/update/{id}',[BantuanController::class,'update'])->name('bantuan.update');
+    Route::get('/donate/{id}',[BantuanController::class,'donate'])->name('bantuan.donate');
+    Route::get('/bagikan/aksi',[BantuanController::class,'bagikanBantuanAction'])->name('bantuan.bagikan');
     // pkh
     // Route::get('/pkh/hapus/{id}',[BantuanPkhController::class,'hapus'])->name('pkh.hapus');
     // Route::post('/pkh/konfirmasi/{id}',[BantuanPkhController::class,'konfirmasi'])->name('pkh.konfirmasi');

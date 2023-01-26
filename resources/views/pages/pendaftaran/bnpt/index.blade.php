@@ -10,9 +10,11 @@
                     <div class="flex-grow-1 ms-3">
                         <h5 class="mt-0">{{ $pendaftaran->nama }}, {{ $pendaftaran->nik }}</h5>
                         <p class="mb-0">Pendaftaran bantuan anda sudah dikirim, silahkan pantau terus aplikasi anda</p>
-                        <span class="badge bg-primary">{{ $pendaftaran->status }}</span>
+                        Status : <span class="badge bg-primary">{{ $pendaftaran->status }}</span>
                         <br>
-                        <span>{{ $pendaftaran->jenis_bantuan }}</span>
+                        Tracking : <span class="badge bg-primary">{{ $pendaftaran->tracking }}</span>
+                        <br>
+                        Jenis Bantuan : <span>{{ $pendaftaran->jenis_bantuan }}</span>
                         <br>
                         <br>
                         <span class="text-small text-secondary">{{ $pendaftaran->updated_at->diffForHumans() }}</span>

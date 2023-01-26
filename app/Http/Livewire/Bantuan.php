@@ -37,7 +37,7 @@ class Bantuan extends Component
         }
         $query = $query->paginate(10);
         $jenis = $this->jenis;
-        $count = Administrasi::with('penduduk')->where('status','Lolos')->where('konfirmasi',1)->where('jenis_bantuan',$this->jenis)->count();
+        $count = Administrasi::with('penduduk')->where('status','Lolos')->where('konfirmasi',1)->where('tracking','Dikonfirmasi Admin Desa')->where('jenis_bantuan',$this->jenis)->count();
         return view('livewire.bantuan',compact('query','jenis','count'));
     }
 }
