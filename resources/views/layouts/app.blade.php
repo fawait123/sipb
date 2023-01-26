@@ -30,6 +30,7 @@
     <link rel="stylesheet" href="{{ asset('assets') }}/css/dark-theme.css" />
     <link rel="stylesheet" href="{{ asset('assets') }}/css/semi-dark.css" />
     <link rel="stylesheet" href="{{ asset('assets') }}/css/header-colors.css" />
+    <link href="{{ asset('assets') }}/plugins/fancy-file-uploader/fancy_fileupload.css" rel="stylesheet" />
     @livewireStyles
     <style>
         .personsMenu,
@@ -576,6 +577,7 @@
     <script src="{{ asset('assets') }}/plugins/notifications/js/lobibox.min.js"></script>
     <script src="{{ asset('assets') }}/plugins/notifications/js/notifications.min.js"></script>
     <script src="{{ asset('assets') }}/plugins/notifications/js/notification-custom-script.js"></script>
+    <script src="{{ asset('assets') }}/plugins/fancy-file-uploader/jquery.fancy-fileupload.js"></script>
     <!--app JS-->
     <script src="{{ asset('assets') }}/js/app.js"></script>
     <script src="{{ asset('assets') }}/plugins/select2/js/select2.min.js"></script>

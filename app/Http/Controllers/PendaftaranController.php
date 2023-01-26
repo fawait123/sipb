@@ -7,6 +7,7 @@ use App\Models\Penduduk;
 use Illuminate\Http\Request;
 use Carbon\CarbonPeriod;
 use App\Models\JenisBantuan;
+use App\Models\Administrasi;
 use App\Models\Desa;
 
 class PendaftaranController extends Controller
@@ -14,7 +15,7 @@ class PendaftaranController extends Controller
     public function pendaftaranbnpt()
     {
         $penduduk = Penduduk::where('nik',auth()->user()->username)->first();
-        $pendaftaran = Pendaftaran::with('penduduk')->where('id_penduduk',$penduduk->id)->latest()->first();
+        $pendaftaran = Administrasi::with('penduduk')->where('id_penduduk',$penduduk->id)->where('status','!=','Sudah Disalurkan')->latest()->first();
         $umur = $this->getRange($penduduk->tgl_lahir,date('Y-m-d'));
         $jenis = JenisBantuan::all();
         $desa = Desa::all();
@@ -27,12 +28,27 @@ class PendaftaranController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'id_desa'=>'required',
-            'id_jenis_bantuan'=>'required',
+        $penduduk = Penduduk::where('nik',auth()->user()->username)->first();
+        Administrasi::create([
+            'id_desa'=>$penduduk->id_desa,
+            'nik'=>$penduduk->nik,
+            'nama'=>$penduduk->nama,
+            'nama'=>$penduduk->nama,
+            'id_penduduk'=>$penduduk->id,
+            'jk'=>$penduduk->jk,
+            'alamat'=>$penduduk->alamat,
+            'status_kawin'=>$penduduk->status_kawin,
+            'foto_ktp'=>$request->ktp,
+            'foto_penghasilan'=>$request->penghasilan,
+            'jenis_bantuan'=>$request->jenis_bantuan,
+            'status'=>'Terdaftar'
         ]);
+        // $request->validate([
+        //     'id_desa'=>'required',
+        //     'id_jenis_bantuan'=>'required',
+        // ]);
 
-        Pendaftaran::create(array_merge($request->all(),['tgl_pendaftaran'=>date('Y-m-d'),'status'=>'terdaftar']));
+        // Pendaftaran::create(array_merge($request->all(),['tgl_pendaftaran'=>date('Y-m-d'),'status'=>'terdaftar']));
         return redirect()->route('bnpt.pendaftaran')->with(['message'=>'Pendaftaran bantuan berhasil']);
     }
 

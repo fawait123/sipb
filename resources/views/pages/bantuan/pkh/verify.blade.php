@@ -35,7 +35,8 @@
                                 <th>Jenis Kelamin</th>
                                 <th>Agama</th>
                                 <th>Status</th>
-                                <th>Kewarganegaraan</th>
+                                <th>Foto KTP</th>
+                                <th>Foto Penghasilan</th>
                             </tr>
                         </thead>
                         <tbody id="tbody">
@@ -106,7 +107,12 @@
                                     <td>${el.jk}</td>
                                     <td>${el.agama}</td>
                                     <td>${el.status_kawin}</td>
-                                    <td>${el.kewarganegaraan}</td>
+                                    <td>
+                                        <a href="${el.foto_ktp}"  target="blank">Foto KTP</a>
+                                    </td>
+                                    <td>
+                                        <a href="${el.foto_penghasilan}" target="blank">Foto Penghasilan</a>
+                                    </td>
                                 </tr>
                     `;
         })
