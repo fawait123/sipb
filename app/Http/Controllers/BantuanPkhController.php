@@ -346,6 +346,16 @@ class BantuanPkhController extends Controller
             Administrasi::where('status','Sedang diajukan')->orWhere('status','Diverifikasi Kecamatan')->orWhere('status','Diverifikasi Kabupaten')->update([
                 'status'=>$status,
             ]);
+            $status = $bantuan->step == 2 ? 'Dikirimkan' : 'Diverifikasi';
+            if($bantuan->step == 2){
+                Administrasi::where('status','Diterima')->update([
+                    'status'=>$status,
+                ]);
+            }else{
+                Administrasi::where('status','Sedang diajukan')->update([
+                    'status'=>$status,
+                ]);
+            }
             return redirect()->route('pkh.index')->with(['message'=>'Bantuan berhasil dikonfirmasi']);
         }
         return redirect()->route('pkh.index');

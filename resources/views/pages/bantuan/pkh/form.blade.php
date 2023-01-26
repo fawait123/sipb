@@ -44,6 +44,7 @@
                                     <th>Penghasilan</th>
                                     <th>KK</th>
                                     <th>Status</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody id="tbody">
@@ -65,6 +66,7 @@
                                         </td>
                                         <td>
                                             <span>{{ $item->status == 'Terdaftar' ? 'Lolos' : $item->status }}</span>
+                                            <a href="{{ route('pkh.hapus', $item->id) }}" class="text-danger">Tolak</a>
                                         </td>
                                     </tr>
                                 @endforeach

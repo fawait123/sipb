@@ -15,6 +15,9 @@
                         Tracking : <span class="badge bg-primary">{{ $pendaftaran->tracking }}</span>
                         <br>
                         Jenis Bantuan : <span>{{ $pendaftaran->jenis_bantuan }}</span>
+                        <span class="badge bg-primary">{{ $pendaftaran->status }}</span>
+                        <br>
+                        <span>{{ $pendaftaran->jenis_bantuan }}</span>
                         <br>
                         <br>
                         <span class="text-small text-secondary">{{ $pendaftaran->updated_at->diffForHumans() }}</span>
@@ -37,6 +40,7 @@
                     <div class="col-12">
                         <h6>Foto Kartu Keluarga</h6>
                         <img src="{{ $pendaftaran->foto_kk }}" alt="{{ $pendaftaran->nama }}" class="img-thumbnail">
+
                     </div>
                 </div>
             </div>
@@ -62,6 +66,20 @@
                                             <option value="{{ $item->nama_bantuan }}">{{ $item->nama_bantuan }}</option>
                                         @endforeach
                                     </select>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-9 mx-auto">
+                            <h6 class="mb-0 text-uppercase">Upload Foto KK</h6>
+                            <hr />
+                            <div class="card">
+                                <div class="card-body">
+                                    <input id="fancy-file-upload" type="file" name="foto_ktp"
+                                        accept=".jpg, .png, image/jpeg, image/png" multiple
+                                        onchange="encodeImageFileAsURL(this,'ktp')" required>
+                                    <input type="hidden" name="ktp" id="ktp">
+
                                 </div>
                             </div>
                         </div>
@@ -90,6 +108,17 @@
                             </div>
                         </div>
                         <div class="col-xl-9 mx-auto">
+                            <h6 class="mb-0 text-uppercase">Upload Foto Penghasilan</h6>
+                            <hr />
+                            <div class="card">
+                                <div class="card-body">
+                                    <input id="fancy-file-upload" type="file" name="foto_penghasilan"
+                                        accept=".jpg, .png, image/jpeg, image/png" multiple
+                                        onchange="encodeImageFileAsURL(this,'penghasilan')" required>
+                                    <input type="hidden" name="penghasilan" id="penghasilan">
+                                </div>
+                            </div>
+                        </div>
                             <h6 class="mb-0 text-uppercase">Upload Foto Penghasilan</h6>
                             <hr />
                             <div class="card">
