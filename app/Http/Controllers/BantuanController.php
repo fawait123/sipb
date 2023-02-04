@@ -38,11 +38,17 @@ class BantuanController extends Controller
      */
     public function store(Request $request)
     {
+        $id = !$request->filled('id') ? [] : $request->id;
         $request->validate([
             'file' => 'required|file|max:10000',
             'no_surat'=>'required',
             'tgl_pengajuan'=>'required'
         ]);
+        $pendaftaran = Administrasi::with('penduduk')->where('status','Lolos')->where('konfirmasi',1)->where('jenis_bantuan',$request->jenis)->whereIn('id',$id)->get();
+        if(count($pendaftaran)==0){
+            $url = '/bantuan?jenis='.$request->jenis;
+            return redirect($url)->with(['message'=>'Pengajuan '.$request->jenis.' Tidak ada bantuan yang dipilih']);
+        }
         $file = $request->file('file');
         $destinationPath = 'uploads';
         $file->move($destinationPath,$file->getClientOriginalName());
@@ -56,8 +62,7 @@ class BantuanController extends Controller
             'file'=>$destinationPath.'/'. $file->getClientOriginalName()
         ]);
 
-        $pendaftaran = Administrasi::with('penduduk')->where('status','Lolos')->where('konfirmasi',1)->where('jenis_bantuan',$request->jenis)->get();
-
+        // dd($pendaftaran);
         foreach($pendaftaran as $item){
             DetailBantuan::create([
                 'id_penduduk'=>$item->id_penduduk,
