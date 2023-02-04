@@ -45,6 +45,7 @@
                         <table class="table table-bordered table-striped mt-3">
                             <thead>
                                 <tr>
+                                    <th></th>
                                     <th>NIK</th>
                                     <th>Nama</th>
                                     <th>Asal Desa</th>
@@ -59,6 +60,7 @@
                             <tbody id="tbody">
                                 @foreach ($pendaftaran as $item)
                                     <tr>
+                                        <td><input type="checkbox" name="id[]" value="{{ $item->id }}"></td>
                                         <td>{{ $item->penduduk->nik ?? '' }}</td>
                                         <td>{{ $item->penduduk->nama ?? '' }}</td>
                                         <td>{{ $item->penduduk->desa->desa ?? '' }}</td>
